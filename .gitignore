@@ -10,6 +10,7 @@ dist/
 !.env.example
 
 # Tool caches and reports
+.astro/
 .cache/
 .vite/
 coverage/

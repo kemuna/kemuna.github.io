@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { languageNames, translations, type Language } from '../i18n'
+
+interface Props {
+  language: Language
+}
+
+const { language } = Astro.props
+const t = translations[language]
+const currentYear = new Date().getFullYear()
+---
+
+<BaseLayout language={language} title={t.pageTitle} description={t.pageDescription}>
+  <a class="skip-link" href="#main">{t.skipLink}</a>
+
+  <header class="site-header">
+    <a class="wordmark" href={`/${language}/`}>kemuna</a>
+
+    <nav class="main-nav" aria-label={t.navLabel}>
+      <a href="#work">{t.navWork}</a>
+      <a href="#about">{t.navAbout}</a>
+      <a href="#contact">{t.navContact}</a>
+    </nav>
+
+    <div class="language-switcher" aria-label={t.languageLabel}>
+      <a
+        class:list={{ 'is-active': language === 'en' }}
+        href="/en/"
+        hreflang="en"
+        lang="en"
+        aria-current={language === 'en' ? 'page' : undefined}
+        data-language-link="en"
+      >
+        {languageNames.en}
+      </a>
+      <span aria-hidden="true">/</span>
+      <a
+        class:list={{ 'is-active': language === 'uk' }}
+        href="/uk/"
+        hreflang="uk"
+        lang="uk"
+        aria-current={language === 'uk' ? 'page' : undefined}
+        data-language-link="uk"
+      >
+        {languageNames.uk}
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="section-label">Portfolio</p>
+      <h1 id="page-title">kemuna</h1>
+      <p class="role">{t.role}</p>
+    </section>
+
+    <section id="work" aria-labelledby="work-title">
+      <p class="section-label">01</p>
+      <h2 id="work-title">{t.workTitle}</h2>
+      <p class="muted">{t.workPlaceholder}</p>
+    </section>
+
+    <section id="about" aria-labelledby="about-title">
+      <p class="section-label">02</p>
+      <h2 id="about-title">{t.aboutTitle}</h2>
+      <p>{t.role}</p>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-title">
+      <p class="section-label">03</p>
+      <h2 id="contact-title">{t.contactTitle}</h2>
+
+      <a class="email-link" href="mailto:kemuna.meow@gmail.com">kemuna.meow@gmail.com</a>
+
+      <ul class="social-list" aria-label={t.socialLabel}>
+        <li><a href="https://t.me/kemuna_art" target="_blank" rel="noreferrer">Telegram</a></li>
+        <li>
+          <a href="https://www.instagram.com/kemuna.art" target="_blank" rel="noreferrer">
+            Instagram
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/@kemuna_art" target="_blank" rel="noreferrer">
+            YouTube
+          </a>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© {currentYear} Kemuna</p>
+  </footer>
+</BaseLayout>

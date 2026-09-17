@@ -1,0 +1,39 @@
+---
+const fallbackUrl = '/en/'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow, noimageindex" />
+    <meta http-equiv="refresh" content={`0; url=${fallbackUrl}`} />
+    <link rel="canonical" href="https://kemuna.github.io/en/" />
+    <title>Kemuna</title>
+    <script is:inline>
+      (() => {
+        let savedLanguage = null
+
+        try {
+          savedLanguage = localStorage.getItem('kemuna-language')
+        } catch {
+          // Fall back to the browser language when storage is unavailable.
+        }
+
+        const language = savedLanguage === 'uk' || savedLanguage === 'en'
+          ? savedLanguage
+          : navigator.language.toLowerCase().startsWith('uk') ? 'uk' : 'en'
+
+        window.location.replace(`/${language}/${window.location.hash}`)
+      })()
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1>Kemuna</h1>
+      <p>Select a language / Оберіть мову</p>
+      <p><a href="/en/" lang="en">English</a> · <a href="/uk/" lang="uk">Українська</a></p>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+---
+import '../style.css'
+import type { Language } from '../i18n'
+
+interface Props {
+  language: Language
+  title: string
+  description: string
+}
+
+const { language, title, description } = Astro.props
+const canonicalUrl = new URL(`/${language}/`, Astro.site)
+const alternateLanguage: Language = language === 'en' ? 'uk' : 'en'
+const alternateUrl = new URL(`/${alternateLanguage}/`, Astro.site)
+---
+
+<!doctype html>
+<html lang={language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow, noimageindex" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f2eee7" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={language === 'uk' ? 'uk_UA' : 'en_US'} />
+    <meta
+      property="og:locale:alternate"
+      content={alternateLanguage === 'uk' ? 'uk_UA' : 'en_US'}
+    />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang={language} href={canonicalUrl} />
+    <link rel="alternate" hreflang={alternateLanguage} href={alternateUrl} />
+    <link rel="alternate" hreflang="x-default" href="https://kemuna.github.io/en/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+
+    <script>
+      const languageLinks = document.querySelectorAll<HTMLAnchorElement>('[data-language-link]')
+
+      languageLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          const language = link.dataset.languageLink
+          if (language === 'en' || language === 'uk') {
+            try {
+              localStorage.setItem('kemuna-language', language)
+            } catch {
+              // Language navigation still works when browser storage is unavailable.
+            }
+
+            link.hash = window.location.hash
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
