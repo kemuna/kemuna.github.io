@@ -20,6 +20,7 @@ const currentYear = new Date().getFullYear()
     <nav class="main-nav" aria-label={t.navLabel}>
       <a href="#work">{t.navWork}</a>
       <a href="#about">{t.navAbout}</a>
+      <a href="#experience">{t.navExperience}</a>
       <a href="#contact">{t.navContact}</a>
     </nav>
 
@@ -50,8 +51,9 @@ const currentYear = new Date().getFullYear()
 
   <main id="main">
     <section class="intro" aria-labelledby="page-title">
-      <p class="section-label">Portfolio</p>
+      <p class="section-label">{t.portfolioLabel}</p>
       <h1 id="page-title">kemuna</h1>
+      <p class="real-name">{t.realName}</p>
       <p class="role">{t.role}</p>
     </section>
 
@@ -64,11 +66,107 @@ const currentYear = new Date().getFullYear()
     <section id="about" aria-labelledby="about-title">
       <p class="section-label">02</p>
       <h2 id="about-title">{t.aboutTitle}</h2>
+      <p class="about-name">{t.realName} (kemuna)</p>
       <p>{t.role}</p>
     </section>
 
-    <section id="contact" aria-labelledby="contact-title">
+    <section id="experience" aria-labelledby="experience-title">
       <p class="section-label">03</p>
+      <h2 id="experience-title">{t.experienceTitle}</h2>
+
+      <div class="experience-list">
+        <article class="experience-item">
+          <div>
+            <h3>{t.currentExperienceRole}</h3>
+            <p>
+              <a class="company-link" href="https://assol.in.ua/" target="_blank" rel="noreferrer">
+                {t.currentExperienceCompany}
+              </a>
+            </p>
+          </div>
+          <div class="experience-meta">
+            <p>{t.currentExperienceLocation}</p>
+            <p>{t.currentExperiencePeriod}</p>
+          </div>
+          <div class="experience-details">
+            <p>{t.currentExperienceDescription}</p>
+
+            <div class="experience-block">
+              <h4>{t.responsibilitiesTitle}</h4>
+              <ul class="responsibility-list">
+                {t.currentExperienceResponsibilities.map((item) => <li>{item}</li>)}
+              </ul>
+            </div>
+
+            <div class="experience-block">
+              <h4>{t.projectsTitle}</h4>
+              <p>{t.currentExperienceProjects}</p>
+            </div>
+
+            <div class="experience-block">
+              <h4>{t.skillsTitle}</h4>
+              <ul class="skill-list">
+                {t.currentExperienceSkills.map((item) => <li>{item}</li>)}
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <article class="experience-item">
+          <div>
+            <h3>{t.experienceRole}</h3>
+            <p>
+              <a
+                class="company-link"
+                href="https://www.wonderland-games.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Wonderland Games
+              </a>
+            </p>
+          </div>
+          <div class="experience-meta">
+            <p>{t.experienceLocation}</p>
+            <p>{t.experiencePeriod}</p>
+          </div>
+          <div class="experience-details">
+            <p>{t.experienceDescription}</p>
+
+            <div class="experience-block">
+              <h4>{t.responsibilitiesTitle}</h4>
+              <ul class="responsibility-list">
+                {t.experienceResponsibilities.map((item) => <li>{item}</li>)}
+              </ul>
+            </div>
+
+            <div class="experience-block">
+              <h4>{t.projectsTitle}</h4>
+              <p>
+                <a
+                  class="project-link"
+                  href="https://www.wonderland-games.com/projects/numberphile/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <strong>{t.experienceProjectName}</strong>
+                </a>. {t.experienceProjectDescription}
+              </p>
+            </div>
+
+            <div class="experience-block">
+              <h4>{t.skillsTitle}</h4>
+              <ul class="skill-list">
+                {t.experienceSkills.map((item) => <li>{item}</li>)}
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-title">
+      <p class="section-label">04</p>
       <h2 id="contact-title">{t.contactTitle}</h2>
 
       <a class="email-link" href="mailto:kemuna.meow@gmail.com">kemuna.meow@gmail.com</a>
@@ -80,16 +178,11 @@ const currentYear = new Date().getFullYear()
             Instagram
           </a>
         </li>
-        <li>
-          <a href="https://www.youtube.com/@kemuna_art" target="_blank" rel="noreferrer">
-            YouTube
-          </a>
-        </li>
       </ul>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>© {currentYear} Kemuna</p>
+    <p>© {currentYear} {t.realName} (kemuna)</p>
   </footer>
 </BaseLayout>
