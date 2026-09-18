@@ -10,12 +10,14 @@
   "navWork": "Work",
   "navAbout": "About",
   "navExperience": "Experience",
-  "navContact": "Contact",
   "role": "2D Artist / Graphic Designer",
   "workTitle": "Work",
   "workPlaceholder": "Portfolio projects will be added later.",
   "aboutTitle": "About",
+  "photoPlaceholder": "Photo will be added later.",
+  "biographyPlaceholder": "Biography will be added later.",
   "experienceTitle": "Experience",
+  "experienceGalleryPlaceholder": "Work examples will be added later.",
   "currentExperienceRole": "Graphic Designer",
   "currentExperienceCompany": "Assol",
   "currentExperienceLocation": "Smila, Ukraine",
@@ -27,12 +29,14 @@
   "currentExperienceResponsibilities": [
     "Creating promotional visuals for social media posts.",
     "Designing in-store banners, billboards, and printed stickers.",
+    "Creating promotional materials in line with the company’s established brand style.",
     "Adapting existing designs to different formats and advertising media.",
     "Preparing production-ready artwork for print."
   ],
   "currentExperienceProjects": "Creating visual materials for themed and seasonal promotional campaigns and electronics sales throughout the calendar year.",
   "currentExperienceSkills": [
     "Advertising design",
+    "Brand style consistency",
     "Social media graphics",
     "Print layout preparation",
     "Design adaptation for different formats",
@@ -61,6 +65,5 @@
     "Adobe Photoshop",
     "Midjourney",
     "Jira"
-  ],
-  "contactTitle": "Contact"
+  ]
 }

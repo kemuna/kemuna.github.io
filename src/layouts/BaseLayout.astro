@@ -1,17 +1,38 @@
 ---
+import { ClientRouter } from 'astro:transitions'
 import '../style.css'
-import type { Language } from '../i18n'
+import { languageNames, translations, type Language } from '../i18n'
+
+type PageId = 'about' | 'experience' | 'work'
 
 interface Props {
   language: Language
+  currentPage: PageId
   title: string
   description: string
 }
 
-const { language, title, description } = Astro.props
-const canonicalUrl = new URL(`/${language}/`, Astro.site)
+const { language, currentPage, title, description } = Astro.props
+const t = translations[language]
+const currentYear = new Date().getFullYear()
 const alternateLanguage: Language = language === 'en' ? 'uk' : 'en'
-const alternateUrl = new URL(`/${alternateLanguage}/`, Astro.site)
+
+const pagePaths: Record<PageId, string> = {
+  about: '',
+  experience: 'experience/',
+  work: 'work/',
+}
+
+const navigation = [
+  { id: 'about' as const, label: t.navAbout },
+  { id: 'experience' as const, label: t.navExperience },
+  { id: 'work' as const, label: t.navWork },
+]
+
+const currentPath = `/${language}/${pagePaths[currentPage]}`
+const alternatePath = `/${alternateLanguage}/${pagePaths[currentPage]}`
+const canonicalUrl = new URL(currentPath, Astro.site)
+const alternateUrl = new URL(alternatePath, Astro.site)
 ---
 
 <!doctype html>
@@ -21,7 +42,7 @@ const alternateUrl = new URL(`/${alternateLanguage}/`, Astro.site)
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow, noimageindex" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f2eee7" />
+    <meta name="theme-color" content="#ffffff" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -34,29 +55,96 @@ const alternateUrl = new URL(`/${alternateLanguage}/`, Astro.site)
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" hreflang={language} href={canonicalUrl} />
     <link rel="alternate" hreflang={alternateLanguage} href={alternateUrl} />
-    <link rel="alternate" hreflang="x-default" href="https://kemuna.github.io/en/" />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={`https://kemuna.github.io/en/${pagePaths[currentPage]}`}
+    />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
+    <ClientRouter />
   </head>
   <body>
-    <slot />
+    <a class="skip-link" href="#main">{t.skipLink}</a>
+
+    <header class="site-header">
+      <a class="wordmark" href={`/${language}/`}>kemuna</a>
+
+      <nav class="main-nav" aria-label={t.navLabel}>
+        {
+          navigation.map((item) => (
+            <a
+              class:list={{ 'is-active': currentPage === item.id }}
+              href={`/${language}/${pagePaths[item.id]}`}
+              aria-current={currentPage === item.id ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="language-switcher" aria-label={t.languageLabel}>
+        <a
+          class:list={{ 'is-active': language === 'en' }}
+          href={`/en/${pagePaths[currentPage]}`}
+          hreflang="en"
+          lang="en"
+          aria-current={language === 'en' ? 'page' : undefined}
+          data-language-link="en"
+        >
+          {languageNames.en}
+        </a>
+        <span aria-hidden="true">/</span>
+        <a
+          class:list={{ 'is-active': language === 'uk' }}
+          href={`/uk/${pagePaths[currentPage]}`}
+          hreflang="uk"
+          lang="uk"
+          aria-current={language === 'uk' ? 'page' : undefined}
+          data-language-link="uk"
+        >
+          {languageNames.uk}
+        </a>
+      </div>
+    </header>
+
+    <main id="main" transition:animate="slide">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-contacts">
+        <a href="mailto:kemuna.meow@gmail.com">kemuna.meow@gmail.com</a>
+        <ul class="social-list" aria-label={t.socialLabel}>
+          <li><a href="https://t.me/kemuna_art" target="_blank" rel="noreferrer">Telegram</a></li>
+          <li>
+            <a href="https://www.instagram.com/kemuna.art" target="_blank" rel="noreferrer">
+              Instagram
+            </a>
+          </li>
+        </ul>
+      </div>
+      <p>© {currentYear} {t.realName} (kemuna)</p>
+    </footer>
 
     <script>
-      const languageLinks = document.querySelectorAll<HTMLAnchorElement>('[data-language-link]')
+      document.addEventListener('click', (event) => {
+        const target = event.target
+        if (!(target instanceof Element)) return
 
-      languageLinks.forEach((link) => {
-        link.addEventListener('click', () => {
-          const language = link.dataset.languageLink
-          if (language === 'en' || language === 'uk') {
-            try {
-              localStorage.setItem('kemuna-language', language)
-            } catch {
-              // Language navigation still works when browser storage is unavailable.
-            }
+        const link = target.closest<HTMLAnchorElement>('[data-language-link]')
+        const language = link?.dataset.languageLink
 
-            link.hash = window.location.hash
+        if (link && (language === 'en' || language === 'uk')) {
+          try {
+            localStorage.setItem('kemuna-language', language)
+          } catch {
+            // Language navigation still works when browser storage is unavailable.
           }
-        })
+
+          link.hash = window.location.hash
+        }
       })
     </script>
   </body>

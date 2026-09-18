@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { translations, type Language } from '../i18n'
+
+interface Props {
+  language: Language
+}
+
+const { language } = Astro.props
+const t = translations[language]
+---
+
+<BaseLayout
+  language={language}
+  currentPage="work"
+  title={`${t.workTitle} — Kemuna`}
+  description={t.pageDescription}
+>
+  <section class="page-section" aria-labelledby="page-title">
+    <p class="section-label">03</p>
+    <h1 id="page-title" class="page-title">{t.workTitle}</h1>
+    <p class="muted">{t.workPlaceholder}</p>
+
+    <div class="work-grid" aria-hidden="true">
+      <div class="work-placeholder"></div>
+      <div class="work-placeholder"></div>
+      <div class="work-placeholder"></div>
+    </div>
+  </section>
+</BaseLayout>

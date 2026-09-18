@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { translations, type Language } from '../i18n'
+
+interface Props {
+  language: Language
+}
+
+const { language } = Astro.props
+const t = translations[language]
+---
+
+<BaseLayout
+  language={language}
+  currentPage="experience"
+  title={`${t.experienceTitle} — Kemuna`}
+  description={t.pageDescription}
+>
+  <section class="page-section" aria-labelledby="page-title">
+    <p class="section-label">02</p>
+    <h1 id="page-title" class="page-title">{t.experienceTitle}</h1>
+
+    <div class="experience-list">
+      <article class="experience-item">
+        <div>
+          <h2>{t.currentExperienceRole}</h2>
+          <p>
+            <a class="company-link" href="https://assol.in.ua/" target="_blank" rel="noreferrer">
+              {t.currentExperienceCompany}
+            </a>
+          </p>
+        </div>
+        <div class="experience-meta">
+          <p>{t.currentExperienceLocation}</p>
+          <p>{t.currentExperiencePeriod}</p>
+        </div>
+        <div class="experience-details">
+          <p>{t.currentExperienceDescription}</p>
+
+          <div class="experience-block">
+            <h3>{t.responsibilitiesTitle}</h3>
+            <ul class="responsibility-list">
+              {t.currentExperienceResponsibilities.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+
+          <div class="experience-block">
+            <h3>{t.projectsTitle}</h3>
+            <p>{t.currentExperienceProjects}</p>
+          </div>
+
+          <div class="experience-block">
+            <h3>{t.skillsTitle}</h3>
+            <ul class="skill-list">
+              {t.currentExperienceSkills.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+
+          <div class="gallery-placeholder">{t.experienceGalleryPlaceholder}</div>
+        </div>
+      </article>
+
+      <article class="experience-item">
+        <div>
+          <h2>{t.experienceRole}</h2>
+          <p>
+            <a
+              class="company-link"
+              href="https://www.wonderland-games.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Wonderland Games
+            </a>
+          </p>
+        </div>
+        <div class="experience-meta">
+          <p>{t.experienceLocation}</p>
+          <p>{t.experiencePeriod}</p>
+        </div>
+        <div class="experience-details">
+          <p>{t.experienceDescription}</p>
+
+          <div class="experience-block">
+            <h3>{t.responsibilitiesTitle}</h3>
+            <ul class="responsibility-list">
+              {t.experienceResponsibilities.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+
+          <div class="experience-block">
+            <h3>{t.projectsTitle}</h3>
+            <p>
+              <a
+                class="project-link"
+                href="https://www.wonderland-games.com/projects/numberphile/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <strong>{t.experienceProjectName}</strong>
+              </a>. {t.experienceProjectDescription}
+            </p>
+          </div>
+
+          <div class="experience-block">
+            <h3>{t.skillsTitle}</h3>
+            <ul class="skill-list">
+              {t.experienceSkills.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+
+          <div class="gallery-placeholder">{t.experienceGalleryPlaceholder}</div>
+        </div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
