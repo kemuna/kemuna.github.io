@@ -1,6 +1,20 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { translations, type Language } from '../i18n'
+import { Image } from 'astro:assets'
+import annieImage from '../assets/work/illustrations/annie.webp'
+import dancerImage from '../assets/work/illustrations/dancer.webp'
+import elenaHllImage from '../assets/work/illustrations/elena-hll.webp'
+import elfInWoodImage from '../assets/work/illustrations/elf-in-wood.webp'
+import ferxImage from '../assets/work/illustrations/ferx.webp'
+import hyacinthImage from '../assets/work/illustrations/hyacinth.webp'
+import izabelaAutumnImage from '../assets/work/illustrations/izabela-autumn.webp'
+import izabelaAvatarImage from '../assets/work/illustrations/izabela-avatar.webp'
+import izabelaVampireImage from '../assets/work/illustrations/izabela-vampire.webp'
+import jinxGlitchImage from '../assets/work/illustrations/jinx-glitch.webp'
+import makaImage from '../assets/work/illustrations/maka.webp'
+import melinoeImage from '../assets/work/illustrations/melinoe.webp'
+import witchGirlImage from '../assets/work/illustrations/witch-girl.webp'
 
 interface Props {
   language: Language
@@ -8,6 +22,27 @@ interface Props {
 
 const { language } = Astro.props
 const t = translations[language]
+
+const workImages = [
+  elfInWoodImage,
+  jinxGlitchImage,
+  annieImage,
+  izabelaAutumnImage,
+  izabelaAvatarImage,
+  melinoeImage,
+  dancerImage,
+  makaImage,
+  izabelaVampireImage,
+  hyacinthImage,
+  witchGirlImage,
+  elenaHllImage,
+  ferxImage,
+]
+
+const workGallery = workImages.map((src, index) => ({
+  src,
+  alt: t.workGalleryAlts[index],
+}))
 ---
 
 <BaseLayout
@@ -19,12 +54,24 @@ const t = translations[language]
   <section class="page-section" aria-labelledby="page-title">
     <p class="section-label">03</p>
     <h1 id="page-title" class="page-title">{t.workTitle}</h1>
-    <p class="muted">{t.workPlaceholder}</p>
+    <p class="muted">{t.workIntro}</p>
 
-    <div class="work-grid" aria-hidden="true">
-      <div class="work-placeholder"></div>
-      <div class="work-placeholder"></div>
-      <div class="work-placeholder"></div>
+    <div class="work-grid">
+      {
+        workGallery.map((item) => (
+          <figure class="work-item">
+            <Image
+              src={item.src}
+              alt={item.alt}
+              widths={[320, 480, 800]}
+              sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 960px) 48vw, 30vw"
+              format="webp"
+              quality={82}
+              loading="lazy"
+            />
+          </figure>
+        ))
+      }
     </div>
   </section>
 </BaseLayout>

@@ -12,7 +12,22 @@
   "navExperience": "Experience",
   "role": "Graphic Designer / 2D Artist",
   "workTitle": "Work",
-  "workPlaceholder": "Portfolio projects will be added later.",
+  "workIntro": "A selection of my digital illustrations and character artwork.",
+  "workGalleryAlts": [
+    "Digital illustration of a character in a nighttime forest",
+    "Digital character illustration of Jinx with a glitch effect",
+    "Digital illustration of a green-haired character holding a sword",
+    "Digital illustration of a character in a red dress holding an umbrella",
+    "Digital portrait of a silver-haired fantasy character",
+    "Digital illustration of Melinoë",
+    "Digital illustration of a dancer",
+    "Digital illustration of a student character holding a large scythe",
+    "Digital illustration of a silver-haired vampire in a red-and-black dress",
+    "Digital illustration of a blonde fortune teller holding a crystal ball",
+    "Digital illustration of a silver-haired fantasy warrior holding a spear",
+    "Digital illustration of a young woman writing by candlelight",
+    "Digital illustration of a mushroom-themed fantasy character with a mechanical arm"
+  ],
   "aboutTitle": "About",
   "profilePhotoAlt": "Portrait of Yelyzaveta Danchenko",
   "biography": [
