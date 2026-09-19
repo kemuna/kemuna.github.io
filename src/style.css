@@ -1,17 +1,18 @@
 :root {
-  color: #f4f1f8;
-  background: #0d0c12;
+  color: #fff3f7;
+  background: #10090d;
   font-family: Arial, Helvetica, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   color-scheme: dark;
-  --background: #0d0c12;
-  --surface: #17141f;
-  --surface-raised: #1e1a28;
-  --border: #373140;
-  --muted: #aaa3b5;
-  --accent: #c9a7ff;
-  --accent-soft: rgb(164 112 219 / 0.16);
+  --background: #10090d;
+  --surface: #1b1117;
+  --surface-raised: #271821;
+  --border: #452a36;
+  --muted: #c2a9b2;
+  --accent: #ff8fb3;
+  --accent-secondary: #d8a7ff;
+  --accent-soft: rgb(255 143 179 / 0.14);
   --page-width: 72rem;
   --page-padding: clamp(1rem, 4vw, 3rem);
   --header-height: 4.5rem;
@@ -34,7 +35,7 @@ body {
   padding-top: var(--header-height);
   background:
     radial-gradient(circle at 12% 12%, var(--accent-soft), transparent 28rem),
-    radial-gradient(circle at 88% 82%, rgb(82 108 176 / 0.1), transparent 32rem),
+    radial-gradient(circle at 88% 82%, rgb(216 167 255 / 0.08), transparent 32rem),
     var(--background);
 }
 
@@ -91,7 +92,7 @@ main,
   align-items: center;
   height: var(--header-height);
   border-bottom: 1px solid var(--border);
-  background: rgb(13 12 18 / 0.88);
+  background: rgb(16 9 13 / 0.88);
   box-shadow: 0 0.75rem 2.5rem rgb(0 0 0 / 0.16);
   backdrop-filter: blur(14px) saturate(130%);
 }
@@ -424,7 +425,7 @@ h2 {
   padding-block: 1rem;
   border-top: 1px solid var(--border);
   color: var(--muted);
-  background: rgb(13 12 18 / 0.88);
+  background: rgb(16 9 13 / 0.88);
   font-size: 0.875rem;
   box-shadow: 0 -0.75rem 2.5rem rgb(0 0 0 / 0.12);
   backdrop-filter: blur(14px) saturate(130%);
