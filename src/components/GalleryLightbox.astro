@@ -1,0 +1,223 @@
+---
+interface Props {
+  closeLabel: string
+  dialogLabel: string
+  nextLabel: string
+  previousLabel: string
+}
+
+const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
+---
+
+<portfolio-gallery>
+  <slot />
+
+  <dialog class="image-lightbox" aria-label={dialogLabel}>
+    <div class="lightbox-shell">
+      <div class="lightbox-toolbar">
+        <span class="lightbox-counter" aria-live="polite"></span>
+        <button class="lightbox-close" type="button" aria-label={closeLabel} title={closeLabel}>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="m5 5 14 14M19 5 5 19"></path>
+          </svg>
+        </button>
+      </div>
+
+      <button
+        class="lightbox-navigation lightbox-previous"
+        type="button"
+        aria-label={previousLabel}
+        title={previousLabel}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="m15 5-7 7 7 7"></path>
+        </svg>
+      </button>
+
+      <div class="lightbox-stage">
+        <img class="lightbox-image" alt="" />
+      </div>
+
+      <button
+        class="lightbox-navigation lightbox-next"
+        type="button"
+        aria-label={nextLabel}
+        title={nextLabel}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="m9 5 7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+  </dialog>
+</portfolio-gallery>
+
+<script>
+  class PortfolioGallery extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.initialized === 'true') return
+      this.dataset.initialized = 'true'
+
+      const triggers = Array.from(
+        this.querySelectorAll<HTMLButtonElement>('[data-full-image]'),
+      )
+      const dialog = this.querySelector<HTMLDialogElement>('.image-lightbox')
+      const stage = this.querySelector<HTMLElement>('.lightbox-stage')
+      const fullImage = this.querySelector<HTMLImageElement>('.lightbox-image')
+      const counter = this.querySelector<HTMLElement>('.lightbox-counter')
+      const previousButton = this.querySelector<HTMLButtonElement>('.lightbox-previous')
+      const nextButton = this.querySelector<HTMLButtonElement>('.lightbox-next')
+      const closeButton = this.querySelector<HTMLButtonElement>('.lightbox-close')
+
+      if (
+        triggers.length === 0 ||
+        !dialog ||
+        !stage ||
+        !fullImage ||
+        !counter ||
+        !previousButton ||
+        !nextButton ||
+        !closeButton
+      ) {
+        return
+      }
+
+      let currentIndex = 0
+      let changeTimer = 0
+      let closeTimer = 0
+      let touchStartX = 0
+      let touchStartY = 0
+
+      previousButton.hidden = triggers.length < 2
+      nextButton.hidden = triggers.length < 2
+
+      const preloadAdjacentImages = () => {
+        if (triggers.length < 2) return
+
+        const adjacentIndexes = [
+          (currentIndex - 1 + triggers.length) % triggers.length,
+          (currentIndex + 1) % triggers.length,
+        ]
+
+        adjacentIndexes.forEach((index) => {
+          const src = triggers[index]?.dataset.fullImage
+          if (src) new window.Image().src = src
+        })
+      }
+
+      const updateImage = (index: number, animate = false) => {
+        currentIndex = (index + triggers.length) % triggers.length
+        const trigger = triggers[currentIndex]
+        const src = trigger?.dataset.fullImage ?? ''
+        const alt = trigger?.dataset.imageAlt ?? ''
+
+        window.clearTimeout(changeTimer)
+
+        const applyImage = () => {
+          fullImage.src = src
+          fullImage.alt = alt
+          counter.textContent = `${currentIndex + 1} / ${triggers.length}`
+          fullImage.classList.remove('is-changing')
+          preloadAdjacentImages()
+        }
+
+        if (animate) {
+          fullImage.classList.add('is-changing')
+          changeTimer = window.setTimeout(applyImage, 120)
+        } else {
+          applyImage()
+        }
+      }
+
+      const openGallery = (index: number) => {
+        updateImage(index)
+        dialog.showModal()
+        document.documentElement.classList.add('lightbox-open')
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => dialog.classList.add('is-open'))
+        })
+      }
+
+      const closeGallery = () => {
+        if (!dialog.open || dialog.classList.contains('is-closing')) return
+
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        dialog.classList.remove('is-open')
+
+        if (reducedMotion) {
+          dialog.close()
+          return
+        }
+
+        dialog.classList.add('is-closing')
+        closeTimer = window.setTimeout(() => dialog.close(), 180)
+      }
+
+      triggers.forEach((trigger, index) => {
+        trigger.addEventListener('click', () => openGallery(index))
+      })
+
+      previousButton.addEventListener('click', () => updateImage(currentIndex - 1, true))
+      nextButton.addEventListener('click', () => updateImage(currentIndex + 1, true))
+      closeButton.addEventListener('click', closeGallery)
+
+      dialog.addEventListener('cancel', (event) => {
+        event.preventDefault()
+        closeGallery()
+      })
+
+      dialog.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') updateImage(currentIndex - 1, true)
+        if (event.key === 'ArrowRight') updateImage(currentIndex + 1, true)
+      })
+
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) closeGallery()
+      })
+
+      stage.addEventListener('click', (event) => {
+        if (event.target === stage) closeGallery()
+      })
+
+      stage.addEventListener(
+        'touchstart',
+        (event) => {
+          const touch = event.changedTouches[0]
+          if (!touch) return
+          touchStartX = touch.clientX
+          touchStartY = touch.clientY
+        },
+        { passive: true },
+      )
+
+      stage.addEventListener(
+        'touchend',
+        (event) => {
+          const touch = event.changedTouches[0]
+          if (!touch) return
+
+          const distanceX = touch.clientX - touchStartX
+          const distanceY = touch.clientY - touchStartY
+
+          if (Math.abs(distanceX) < 50 || Math.abs(distanceX) <= Math.abs(distanceY)) return
+          updateImage(currentIndex + (distanceX < 0 ? 1 : -1), true)
+        },
+        { passive: true },
+      )
+
+      dialog.addEventListener('close', () => {
+        window.clearTimeout(changeTimer)
+        window.clearTimeout(closeTimer)
+        dialog.classList.remove('is-open', 'is-closing')
+        fullImage.classList.remove('is-changing')
+        fullImage.removeAttribute('src')
+        fullImage.alt = ''
+        document.documentElement.classList.remove('lightbox-open')
+      })
+    }
+  }
+
+  if (!customElements.get('portfolio-gallery')) {
+    customElements.define('portfolio-gallery', PortfolioGallery)
+  }
+</script>

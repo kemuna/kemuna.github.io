@@ -39,6 +39,9 @@
   "galleryTitle": "Вибрані роботи",
   "openImageLabel": "Відкрити зображення у повному розмірі",
   "closeImageLabel": "Закрити зображення",
+  "imageViewerLabel": "Перегляд зображення у повному розмірі",
+  "previousImageLabel": "Попереднє зображення",
+  "nextImageLabel": "Наступне зображення",
   "experienceGalleryItems": [
     "Ілюстрація пригодницької сцени, створена для Numberphile",
     "Ілюстрація пригодницької сцени, створена для Numberphile",

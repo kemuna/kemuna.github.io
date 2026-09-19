@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import GalleryLightbox from './GalleryLightbox.astro'
 import { translations, type Language } from '../i18n'
-import { Image } from 'astro:assets'
+import { Image, getImage } from 'astro:assets'
 import annieImage from '../assets/work/illustrations/annie.webp'
 import dancerImage from '../assets/work/illustrations/dancer.webp'
 import elenaHllImage from '../assets/work/illustrations/elena-hll.webp'
@@ -39,10 +40,18 @@ const workImages = [
   ferxImage,
 ]
 
-const workGallery = workImages.map((src, index) => ({
-  src,
-  alt: t.workGalleryAlts[index],
-}))
+const workGallery = await Promise.all(
+  workImages.map(async (src, index) => ({
+    src,
+    alt: t.workGalleryAlts[index],
+    fullSize: await getImage({
+      src,
+      width: Math.min(src.width, 2000),
+      format: 'webp',
+      quality: 88,
+    }),
+  })),
+)
 ---
 
 <BaseLayout
@@ -55,22 +64,37 @@ const workGallery = workImages.map((src, index) => ({
     <h1 id="page-title" class="page-title">{t.workTitle}</h1>
     <p class="muted">{t.workIntro}</p>
 
-    <div class="work-grid">
-      {
-        workGallery.map((item) => (
-          <figure class="work-item">
-            <Image
-              src={item.src}
-              alt={item.alt}
-              widths={[320, 480, 800]}
-              sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 960px) 48vw, 30vw"
-              format="webp"
-              quality={82}
-              loading="lazy"
-            />
-          </figure>
-        ))
-      }
-    </div>
+    <GalleryLightbox
+      closeLabel={t.closeImageLabel}
+      dialogLabel={t.imageViewerLabel}
+      nextLabel={t.nextImageLabel}
+      previousLabel={t.previousImageLabel}
+    >
+      <div class="work-grid">
+        {
+          workGallery.map((item) => (
+            <figure class="work-item">
+              <button
+                class="work-gallery-button"
+                type="button"
+                data-full-image={item.fullSize.src}
+                data-image-alt={item.alt}
+                aria-label={`${t.openImageLabel}: ${item.alt}`}
+              >
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  widths={[320, 480, 800]}
+                  sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 960px) 48vw, 30vw"
+                  format="webp"
+                  quality={82}
+                  loading="lazy"
+                />
+              </button>
+            </figure>
+          ))
+        }
+      </div>
+    </GalleryLightbox>
   </section>
 </BaseLayout>

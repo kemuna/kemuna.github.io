@@ -39,6 +39,9 @@
   "galleryTitle": "Selected work",
   "openImageLabel": "Open full-size image",
   "closeImageLabel": "Close image",
+  "imageViewerLabel": "Full-size image viewer",
+  "previousImageLabel": "Previous image",
+  "nextImageLabel": "Next image",
   "experienceGalleryItems": [
     "Adventure scene artwork created for Numberphile",
     "Adventure scene artwork created for Numberphile",
