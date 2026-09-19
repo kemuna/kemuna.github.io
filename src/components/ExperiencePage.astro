@@ -46,7 +46,6 @@ const wonderlandGallery = await Promise.all(
   description={t.pageDescription}
 >
   <section class="page-section" aria-labelledby="page-title">
-    <p class="section-label">02</p>
     <h1 id="page-title" class="page-title">{t.experienceTitle}</h1>
 
     <div class="experience-list">
@@ -155,7 +154,7 @@ const wonderlandGallery = await Promise.all(
                         src={item.src}
                         alt={item.alt}
                         widths={[320, 480, 720]}
-                        sizes="(max-width: 640px) calc(100vw - 2rem), 24rem"
+                        sizes="(max-width: 640px) calc((100vw - 2.5rem) / 2), (max-width: 900px) 30vw, 24rem"
                         format="webp"
                         quality={80}
                         loading="lazy"

@@ -42,7 +42,7 @@ const alternateUrl = new URL(alternatePath, Astro.site)
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow, noimageindex" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#0d0c12" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -82,6 +82,7 @@ const alternateUrl = new URL(alternatePath, Astro.site)
             </a>
           ))
         }
+        <a href="#contact">{t.navContact}</a>
       </nav>
 
       <div class="language-switcher" aria-label={t.languageLabel}>
@@ -113,18 +114,52 @@ const alternateUrl = new URL(alternatePath, Astro.site)
       <slot />
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-contacts">
-        <a href="mailto:kemuna.meow@gmail.com">kemuna.meow@gmail.com</a>
-        <ul class="social-list" aria-label={t.socialLabel}>
-          <li><a href="https://t.me/kemuna_art" target="_blank" rel="noreferrer">Telegram</a></li>
-          <li>
-            <a href="https://www.instagram.com/kemuna.art" target="_blank" rel="noreferrer">
-              Instagram
-            </a>
-          </li>
-        </ul>
-      </div>
+    <footer id="contact" class="site-footer">
+      <ul class="footer-contacts" aria-label={t.contactLabel}>
+        <li>
+          <a
+            class="social-link"
+            href="mailto:kemuna.meow@gmail.com"
+            aria-label="Email: kemuna.meow@gmail.com"
+            title="kemuna.meow@gmail.com"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M3 5.75h18v12.5H3z"></path>
+              <path d="m4 7 8 6 8-6"></path>
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a
+            class="social-link"
+            href="https://t.me/kemuna_art"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Telegram"
+            title="Telegram"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M21.5 3.5 18.4 19c-.2 1.1-.9 1.4-1.8.9l-4.7-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.8 8.8-8c.4-.3-.1-.5-.6-.2L6.3 13l-4.7-1.5c-1-.3-1-1 .2-1.5l18.3-7.1c.9-.3 1.6.2 1.4.6Z"></path>
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a
+            class="social-link"
+            href="https://www.instagram.com/kemuna.art"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Instagram"
+            title="Instagram"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+              <circle cx="12" cy="12" r="4.25"></circle>
+              <circle class="instagram-dot" cx="17.4" cy="6.7" r="1"></circle>
+            </svg>
+          </a>
+        </li>
+      </ul>
       <p>© {currentYear} {t.realName} (kemuna)</p>
     </footer>
 
