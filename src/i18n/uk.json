@@ -18,6 +18,17 @@
   "biographyPlaceholder": "Біографію буде додано пізніше.",
   "experienceTitle": "Досвід роботи",
   "experienceGalleryPlaceholder": "Приклади робіт буде додано пізніше.",
+  "galleryTitle": "Вибрані роботи",
+  "openImageLabel": "Відкрити зображення у повному розмірі",
+  "closeImageLabel": "Закрити зображення",
+  "experienceGalleryItems": [
+    "Ілюстрація пригодницької сцени, створена для Numberphile",
+    "Ілюстрація пригодницької сцени, створена для Numberphile",
+    "Ілюстрація пригодницької сцени, створена для Numberphile",
+    "Головне меню Numberphile",
+    "Екран вибору пригод у Numberphile",
+    "Екран ігрового процесу Numberphile"
+  ],
   "currentExperienceRole": "Графічний дизайнер",
   "currentExperienceCompany": "Ассоль",
   "currentExperienceLocation": "Сміла, Україна",

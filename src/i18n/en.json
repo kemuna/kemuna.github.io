@@ -18,6 +18,17 @@
   "biographyPlaceholder": "Biography will be added later.",
   "experienceTitle": "Experience",
   "experienceGalleryPlaceholder": "Work examples will be added later.",
+  "galleryTitle": "Selected work",
+  "openImageLabel": "Open full-size image",
+  "closeImageLabel": "Close image",
+  "experienceGalleryItems": [
+    "Adventure scene artwork created for Numberphile",
+    "Adventure scene artwork created for Numberphile",
+    "Adventure scene artwork created for Numberphile",
+    "Numberphile main menu screen",
+    "Adventure selection screen from Numberphile",
+    "Numberphile gameplay screen"
+  ],
   "currentExperienceRole": "Graphic Designer",
   "currentExperienceCompany": "Assol",
   "currentExperienceLocation": "Smila, Ukraine",

@@ -1,6 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { translations, type Language } from '../i18n'
+import { Image, getImage } from 'astro:assets'
+import adventureImage from '../assets/experience/wonderland-games/numberphile/adventure.png'
+import adventure11Image from '../assets/experience/wonderland-games/numberphile/adventure-11.png'
+import adventure13Image from '../assets/experience/wonderland-games/numberphile/adventure-13.png'
+import adventure19Image from '../assets/experience/wonderland-games/numberphile/adventure-19.png'
+import levelImage from '../assets/experience/wonderland-games/numberphile/level.png'
+import menuImage from '../assets/experience/wonderland-games/numberphile/menu.png'
 
 interface Props {
   language: Language
@@ -8,6 +15,28 @@ interface Props {
 
 const { language } = Astro.props
 const t = translations[language]
+
+const wonderlandSources = [
+  adventure11Image,
+  adventure13Image,
+  adventure19Image,
+  menuImage,
+  adventureImage,
+  levelImage,
+]
+
+const wonderlandGallery = await Promise.all(
+  wonderlandSources.map(async (src, index) => ({
+    src,
+    alt: t.experienceGalleryItems[index],
+    fullSize: await getImage({
+      src,
+      width: Math.min(src.width, 1600),
+      format: 'webp',
+      quality: 85,
+    }),
+  })),
+)
 ---
 
 <BaseLayout
@@ -109,9 +138,77 @@ const t = translations[language]
             </ul>
           </div>
 
-          <div class="gallery-placeholder">{t.experienceGalleryPlaceholder}</div>
+          <div class="experience-block">
+            <h3>{t.galleryTitle}</h3>
+            <portfolio-gallery>
+              <div class="experience-gallery">
+                {
+                  wonderlandGallery.map((item) => (
+                    <button
+                      class="experience-gallery-button"
+                      type="button"
+                      data-full-image={item.fullSize.src}
+                      data-image-alt={item.alt}
+                      aria-label={`${t.openImageLabel}: ${item.alt}`}
+                    >
+                      <Image
+                        src={item.src}
+                        alt={item.alt}
+                        widths={[320, 480, 720]}
+                        sizes="(max-width: 640px) calc(100vw - 2rem), 24rem"
+                        format="webp"
+                        quality={80}
+                        loading="lazy"
+                      />
+                    </button>
+                  ))
+                }
+              </div>
+
+              <dialog class="image-lightbox">
+                <form method="dialog">
+                  <button class="lightbox-close" aria-label={t.closeImageLabel}>
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </form>
+                <img src="" alt="" />
+              </dialog>
+            </portfolio-gallery>
+          </div>
         </div>
       </article>
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  class PortfolioGallery extends HTMLElement {
+    connectedCallback() {
+      const dialog = this.querySelector<HTMLDialogElement>('.image-lightbox')
+      const fullImage = dialog?.querySelector<HTMLImageElement>('img')
+
+      if (!dialog || !fullImage) return
+
+      this.querySelectorAll<HTMLButtonElement>('[data-full-image]').forEach((button) => {
+        button.addEventListener('click', () => {
+          fullImage.src = button.dataset.fullImage ?? ''
+          fullImage.alt = button.dataset.imageAlt ?? ''
+          dialog.showModal()
+        })
+      })
+
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close()
+      })
+
+      dialog.addEventListener('close', () => {
+        fullImage.removeAttribute('src')
+        fullImage.alt = ''
+      })
+    }
+  }
+
+  if (!customElements.get('portfolio-gallery')) {
+    customElements.define('portfolio-gallery', PortfolioGallery)
+  }
+</script>
