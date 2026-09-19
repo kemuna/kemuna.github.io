@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { translations, type Language } from '../i18n'
+import { Image } from 'astro:assets'
+import profilePhoto from '../assets/profile/profile-photo.jpg'
 
 interface Props {
   language: Language
@@ -17,8 +19,18 @@ const t = translations[language]
   description={t.pageDescription}
 >
   <section class="page-section about-page" aria-labelledby="page-title">
-    <div class="photo-placeholder" aria-label={t.photoPlaceholder}>
-      <span>{t.photoPlaceholder}</span>
+    <div class="profile-photo-frame">
+      <Image
+        class="profile-photo"
+        src={profilePhoto}
+        alt={t.profilePhotoAlt}
+        widths={[320, 480, 720, 960]}
+        sizes="(max-width: 640px) calc(100vw - 2rem), 36vw"
+        format="webp"
+        quality={85}
+        loading="eager"
+        fetchpriority="high"
+      />
     </div>
 
     <div class="about-content">
@@ -27,9 +39,9 @@ const t = translations[language]
       <p class="alias">kemuna</p>
       <p class="role">{t.role}</p>
 
-      <div class="biography-placeholder">
+      <div class="biography">
         <h2>{t.aboutTitle}</h2>
-        <p>{t.biographyPlaceholder}</p>
+        {t.biography.map((paragraph) => <p>{paragraph}</p>)}
       </div>
     </div>
   </section>

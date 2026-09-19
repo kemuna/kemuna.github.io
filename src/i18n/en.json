@@ -14,8 +14,11 @@
   "workTitle": "Work",
   "workPlaceholder": "Portfolio projects will be added later.",
   "aboutTitle": "About",
-  "photoPlaceholder": "Photo will be added later.",
-  "biographyPlaceholder": "Biography will be added later.",
+  "profilePhotoAlt": "Portrait of Yelyzaveta Danchenko",
+  "biography": [
+    "My name is Yelyzaveta Danchenko, and “kemuna” is my creative alias. I am a graphic designer and 2D artist focused on digital illustration and design. I especially enjoy drawing characters and turning ideas into expressive visual concepts.",
+    "I have experience creating promotional materials, working with established brand identities, preparing artwork for print, adapting designs across different formats, and creating artwork for games. This portfolio presents my skills and professional experience. I am open to full-time opportunities where I can continue developing as an artist and designer."
+  ],
   "experienceTitle": "Experience",
   "experienceGalleryPlaceholder": "Work examples will be added later.",
   "galleryTitle": "Selected work",
