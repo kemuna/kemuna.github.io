@@ -72,8 +72,11 @@ const workGallery = await Promise.all(
     >
       <div class="work-grid">
         {
-          workGallery.map((item) => (
-            <figure class="work-item">
+          workGallery.map((item, index) => (
+            <figure
+              class="work-item"
+              style={`--reveal-delay: ${Math.min(100 + index * 35, 380)}ms`}
+            >
               <button
                 class="work-gallery-button"
                 type="button"
@@ -88,7 +91,7 @@ const workGallery = await Promise.all(
                   sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 960px) 48vw, 30vw"
                   format="webp"
                   quality={82}
-                  loading="lazy"
+                  loading={index < 3 ? 'eager' : 'lazy'}
                 />
               </button>
             </figure>

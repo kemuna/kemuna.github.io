@@ -56,6 +56,7 @@ const wonderlandGallery = await Promise.all(
           <p>
             <a class="company-link" href="https://assol.in.ua/" target="_blank" rel="noreferrer">
               {t.currentExperienceCompany}
+              <span aria-hidden="true">↗</span>
             </a>
           </p>
         </div>
@@ -100,6 +101,7 @@ const wonderlandGallery = await Promise.all(
               rel="noreferrer"
             >
               Wonderland Games
+              <span aria-hidden="true">↗</span>
             </a>
           </p>
         </div>
@@ -119,7 +121,7 @@ const wonderlandGallery = await Promise.all(
 
           <div class="experience-block">
             <h3>{t.projectsTitle}</h3>
-            <p>
+            <div class="project-summary">
               <a
                 class="project-link"
                 href="https://www.wonderland-games.com/projects/numberphile/"
@@ -127,8 +129,10 @@ const wonderlandGallery = await Promise.all(
                 rel="noreferrer"
               >
                 <strong>{t.experienceProjectName}</strong>
-              </a>. {t.experienceProjectDescription}
-            </p>
+                <span aria-hidden="true">↗</span>
+              </a>
+              <p>{t.experienceProjectDescription}</p>
+            </div>
           </div>
 
           <div class="experience-block">

@@ -18,6 +18,9 @@
   --page-width: 72rem;
   --page-padding: clamp(1rem, 4vw, 3rem);
   --header-height: 4.5rem;
+  --motion-fast: 160ms;
+  --motion-base: 280ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -105,6 +108,12 @@ main,
   font-size: 1.25rem;
   font-weight: 700;
   text-decoration: none;
+  transition: color var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out);
+}
+
+.wordmark:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .main-nav {
@@ -115,10 +124,38 @@ main,
 }
 
 .main-nav a {
+  position: relative;
   padding-block: 0.75rem;
   color: var(--muted);
   text-decoration: none;
   white-space: nowrap;
+  transition: color var(--motion-fast) ease;
+}
+
+.main-nav a::after {
+  position: absolute;
+  right: 0;
+  bottom: 0.45rem;
+  left: 0;
+  height: 1px;
+  background: var(--accent);
+  content: '';
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: opacity var(--motion-fast) ease, transform var(--motion-base) var(--ease-out);
+}
+
+.main-nav a:hover,
+.main-nav a:focus-visible {
+  color: inherit;
+}
+
+.main-nav a:hover::after,
+.main-nav a:focus-visible::after,
+.main-nav a.is-active::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .main-nav a.is-active {
@@ -137,6 +174,12 @@ main,
 .language-switcher a {
   color: var(--muted);
   text-decoration: none;
+  transition: color var(--motion-fast) ease;
+}
+
+.language-switcher a:hover,
+.language-switcher a:focus-visible {
+  color: var(--accent);
 }
 
 .language-switcher a.is-active {
@@ -173,6 +216,7 @@ main {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 0.38), 0 0 3rem var(--accent-soft);
+  transition: border-color var(--motion-base) ease, box-shadow var(--motion-base) ease;
 }
 
 .profile-photo {
@@ -181,6 +225,16 @@ main {
   height: 100%;
   object-fit: cover;
   object-position: 50% 50%;
+  transition: transform 600ms var(--ease-out);
+}
+
+.profile-photo-frame:hover {
+  border-color: rgb(255 143 179 / 0.48);
+  box-shadow: 0 1.75rem 4.5rem rgb(0 0 0 / 0.44), 0 0 3.5rem var(--accent-soft);
+}
+
+.profile-photo-frame:hover .profile-photo {
+  transform: scale(1.012);
 }
 
 h1 {
@@ -189,6 +243,11 @@ h1 {
   font-weight: 500;
   line-height: 0.92;
   letter-spacing: -0.055em;
+  color: #f7edf2;
+  background: linear-gradient(105deg, #f7edf2 8%, #c9cbd3 52%, #ff9fbd 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-wrap: balance;
 }
 
@@ -257,20 +316,79 @@ h4 {
 }
 
 .experience-item h2 {
-  margin-bottom: 0.5rem;
-  font-size: 1.25rem;
-  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  line-height: 1.15;
 }
 
-.company-link,
-.project-link {
-  text-decoration-color: var(--accent);
-  text-underline-offset: 0.2em;
+.company-link {
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.15rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: var(--muted);
+  background: rgb(39 24 33 / 0.58);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
+  text-decoration: none;
+  transition: border-color var(--motion-fast) ease, color var(--motion-fast) ease,
+    background var(--motion-fast) ease, box-shadow var(--motion-base) ease,
+    transform var(--motion-base) var(--ease-out);
+}
+
+.company-link span {
+  color: var(--accent);
+  font-size: 0.9em;
+  line-height: 1;
+  transition: transform var(--motion-base) var(--ease-out);
 }
 
 .company-link:hover,
-.project-link:hover {
+.company-link:focus-visible {
+  border-color: var(--accent);
+  color: inherit;
+  background: var(--accent-soft);
+  box-shadow: 0 0.65rem 1.5rem rgb(0 0 0 / 0.2), 0 0 1rem var(--accent-soft);
+  transform: translateY(-2px);
+}
+
+.company-link:hover span,
+.company-link:focus-visible span {
+  transform: translate(0.1rem, -0.1rem);
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--motion-fast) ease;
+}
+
+.project-link span {
   color: var(--accent);
+  font-size: 0.9em;
+  line-height: 1;
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+.project-link:hover,
+.project-link:focus-visible {
+  color: var(--accent);
+}
+
+.project-link:hover span,
+.project-link:focus-visible span {
+  transform: translate(0.1rem, -0.1rem);
+}
+
+.project-summary p {
+  margin-top: 0.5rem;
+  color: var(--muted);
 }
 
 .experience-meta {
@@ -312,8 +430,30 @@ h4 {
 .skill-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1.25rem;
-  color: var(--muted);
+  gap: 0.5rem;
+}
+
+.skill-list li {
+  max-width: 100%;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid rgb(255 143 179 / 0.42);
+  border-radius: 999px;
+  color: #ffd5e2;
+  background: rgb(255 143 179 / 0.09);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  transition: border-color var(--motion-fast) ease, background var(--motion-fast) ease,
+    box-shadow var(--motion-base) ease, transform var(--motion-base) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .skill-list li:hover {
+    border-color: rgb(255 143 179 / 0.78);
+    background: rgb(255 143 179 / 0.15);
+    box-shadow: 0 0.6rem 1.25rem rgb(0 0 0 / 0.18), 0 0 0.9rem var(--accent-soft);
+    transform: translateY(-2px) scale(1.015);
+  }
 }
 
 .gallery-placeholder {
@@ -340,24 +480,32 @@ h4 {
   padding: 0;
   place-items: center;
   border: 1px solid var(--border);
+  border-radius: 0.5rem;
   color: inherit;
   background: var(--surface);
   cursor: zoom-in;
+  transition: border-color var(--motion-fast) ease, box-shadow var(--motion-base) ease,
+    transform var(--motion-base) var(--ease-out);
 }
 
 .experience-gallery-button img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition: transform 180ms ease;
+  transition: filter var(--motion-base) ease, transform var(--motion-base) var(--ease-out);
 }
 
-.experience-gallery-button:hover img {
-  transform: scale(1.02);
+.experience-gallery-button:hover img,
+.experience-gallery-button:focus-visible img {
+  filter: saturate(1.06) brightness(1.03);
+  transform: scale(1.025);
 }
 
-.experience-gallery-button:hover {
+.experience-gallery-button:hover,
+.experience-gallery-button:focus-visible {
   border-color: var(--accent);
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.28), 0 0 1.5rem var(--accent-soft);
+  transform: translateY(-2px);
 }
 
 html.lightbox-open {
@@ -383,8 +531,7 @@ portfolio-gallery {
   background: transparent;
   box-shadow: none;
   overscroll-behavior: contain;
-  transform: scale(0.985);
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition: opacity 260ms ease;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -393,12 +540,11 @@ portfolio-gallery {
   background: transparent;
   backdrop-filter: blur(0);
   -webkit-backdrop-filter: blur(0);
-  transition: background 180ms ease, backdrop-filter 180ms ease;
+  transition: background 320ms ease, backdrop-filter 320ms ease;
 }
 
 .image-lightbox.is-open {
   opacity: 1;
-  transform: scale(1);
 }
 
 .image-lightbox.is-open::backdrop {
@@ -409,7 +555,6 @@ portfolio-gallery {
 
 .image-lightbox.is-closing {
   opacity: 0;
-  transform: scale(0.985);
 }
 
 .lightbox-shell {
@@ -429,7 +574,18 @@ portfolio-gallery {
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 0.75rem 0.5rem 1rem;
+  opacity: 0;
   background: transparent;
+  pointer-events: none;
+  transform: translateY(-0.6rem);
+  transition: opacity 220ms ease, transform 280ms var(--ease-out);
+}
+
+.image-lightbox.is-open .lightbox-toolbar {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition-delay: 90ms;
 }
 
 .lightbox-counter {
@@ -458,17 +614,27 @@ portfolio-gallery {
   height: auto;
   max-height: calc(100dvh - 5rem);
   object-fit: contain;
-  opacity: 1;
+  opacity: 0;
   cursor: default;
-  transform: scale(1);
-  transition: opacity 120ms ease, transform 120ms ease;
+  filter: blur(0.35rem);
+  transform: translateY(1.25rem) scale(0.92);
+  transform-origin: center;
+  transition: opacity 300ms ease, filter 420ms ease, transform 460ms var(--ease-out);
   user-select: none;
   -webkit-user-drag: none;
 }
 
-.lightbox-image.is-changing {
+.image-lightbox.is-open.is-image-ready .lightbox-image {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0) scale(1);
+}
+
+.image-lightbox.is-open.is-image-ready .lightbox-image.is-changing {
   opacity: 0;
-  transform: scale(0.99);
+  filter: blur(0.15rem);
+  transform: translateY(0.4rem) scale(0.985);
+  transition-duration: 140ms;
 }
 
 .lightbox-close,
@@ -490,12 +656,19 @@ portfolio-gallery {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
+  transition: border-color var(--motion-fast) ease, color var(--motion-fast) ease,
+    background var(--motion-fast) ease, box-shadow var(--motion-base) ease,
+    opacity 220ms ease;
 }
 
 .lightbox-close:hover,
-.lightbox-navigation:hover {
+.lightbox-navigation:hover,
+.lightbox-close:focus-visible,
+.lightbox-navigation:focus-visible {
   border-color: var(--accent);
   color: var(--accent);
+  background: rgb(69 42 54 / 0.72);
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.3), 0 0 1.25rem var(--accent-soft);
 }
 
 .lightbox-close svg,
@@ -513,7 +686,15 @@ portfolio-gallery {
   position: absolute;
   z-index: 2;
   top: 50%;
+  opacity: 0;
+  pointer-events: none;
   transform: translateY(-50%);
+}
+
+.image-lightbox.is-open .lightbox-navigation {
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 110ms;
 }
 
 .lightbox-previous {
@@ -552,6 +733,7 @@ portfolio-gallery {
   color: inherit;
   background: transparent;
   cursor: zoom-in;
+  transition: transform var(--motion-base) var(--ease-out);
 }
 
 .work-item img {
@@ -561,11 +743,21 @@ portfolio-gallery {
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 0.24);
-  transition: transform 180ms ease;
+  transition: border-color var(--motion-fast) ease, box-shadow var(--motion-base) ease,
+    filter var(--motion-base) ease, transform var(--motion-base) var(--ease-out);
 }
 
-.work-gallery-button:hover img {
-  transform: scale(1.015);
+.work-gallery-button:hover,
+.work-gallery-button:focus-visible {
+  transform: translateY(-3px);
+}
+
+.work-gallery-button:hover img,
+.work-gallery-button:focus-visible img {
+  border-color: rgb(255 143 179 / 0.62);
+  box-shadow: 0 1.35rem 3rem rgb(0 0 0 / 0.34), 0 0 1.5rem var(--accent-soft);
+  filter: saturate(1.06) brightness(1.03);
+  transform: scale(1.012);
 }
 
 .site-footer {
@@ -600,11 +792,18 @@ portfolio-gallery {
   border-radius: 50%;
   color: var(--muted);
   background: var(--surface);
+  transition: border-color var(--motion-fast) ease, color var(--motion-fast) ease,
+    background var(--motion-fast) ease, box-shadow var(--motion-base) ease,
+    transform var(--motion-base) var(--ease-out);
 }
 
-.social-link:hover {
+.social-link:hover,
+.social-link:focus-visible {
   border-color: var(--accent);
   color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0.75rem 1.75rem rgb(0 0 0 / 0.24), 0 0 1rem var(--accent-soft);
+  transform: translateY(-2px);
 }
 
 .social-link svg {
@@ -632,6 +831,64 @@ portfolio-gallery {
 .social-link[href*='instagram'] .instagram-dot {
   fill: currentColor;
   stroke: none;
+}
+
+@keyframes content-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.9rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-photo-frame,
+.about-content > h1,
+.alias,
+.role,
+.biography,
+.page-section > .page-title,
+.page-section > .muted,
+.experience-item,
+.work-item {
+  animation: content-reveal 520ms var(--ease-out) both;
+}
+
+.profile-photo-frame,
+.page-section > .page-title {
+  animation-delay: 40ms;
+}
+
+.about-content > h1 {
+  animation-delay: 100ms;
+}
+
+.alias,
+.page-section > .muted {
+  animation-delay: 150ms;
+}
+
+.role {
+  animation-delay: 190ms;
+}
+
+.biography {
+  animation-delay: 240ms;
+}
+
+.experience-item:first-child {
+  animation-delay: 120ms;
+}
+
+.experience-item:nth-child(2) {
+  animation-delay: 210ms;
+}
+
+.work-item {
+  animation-delay: var(--reveal-delay, 100ms);
 }
 
 :focus-visible {
@@ -805,11 +1062,26 @@ portfolio-gallery {
     scroll-behavior: auto;
   }
 
-  .image-lightbox,
-  .image-lightbox::backdrop,
-  .lightbox-image,
-  .experience-gallery-button img,
-  .work-item img {
-    transition-duration: 0.01ms;
+  *,
+  *::before,
+  *::after {
+    animation-delay: 0ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  h1 {
+    background: none;
+    color: CanvasText;
+    -webkit-text-fill-color: currentColor;
   }
 }

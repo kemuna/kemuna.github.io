@@ -83,66 +83,123 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
       }
 
       let currentIndex = 0
+      let orderedTriggers = [...triggers]
       let changeTimer = 0
       let closeTimer = 0
+      let imageChangeId = 0
       let touchStartX = 0
       let touchStartY = 0
 
       previousButton.hidden = triggers.length < 2
       nextButton.hidden = triggers.length < 2
 
+      const refreshTriggerOrder = () => {
+        const columns = new Map<
+          number,
+          Array<{ trigger: HTMLButtonElement; top: number }>
+        >()
+
+        triggers.forEach((trigger) => {
+          const rect = trigger.getBoundingClientRect()
+          const column = Math.round(rect.left / 16)
+          const columnItems = columns.get(column) ?? []
+
+          columnItems.push({ trigger, top: rect.top })
+          columns.set(column, columnItems)
+        })
+
+        const orderedColumns = Array.from(columns.entries())
+          .sort(([firstColumn], [secondColumn]) => firstColumn - secondColumn)
+          .map(([, columnItems]) => columnItems.sort((first, second) => first.top - second.top))
+        const longestColumn = Math.max(...orderedColumns.map((column) => column.length))
+
+        orderedTriggers = []
+
+        for (let row = 0; row < longestColumn; row += 1) {
+          orderedColumns.forEach((column) => {
+            const item = column[row]
+            if (item) orderedTriggers.push(item.trigger)
+          })
+        }
+      }
+
       const preloadAdjacentImages = () => {
-        if (triggers.length < 2) return
+        if (orderedTriggers.length < 2) return
 
         const adjacentIndexes = [
-          (currentIndex - 1 + triggers.length) % triggers.length,
-          (currentIndex + 1) % triggers.length,
+          (currentIndex - 1 + orderedTriggers.length) % orderedTriggers.length,
+          (currentIndex + 1) % orderedTriggers.length,
         ]
 
         adjacentIndexes.forEach((index) => {
-          const src = triggers[index]?.dataset.fullImage
+          const src = orderedTriggers[index]?.dataset.fullImage
           if (src) new window.Image().src = src
         })
       }
 
       const updateImage = (index: number, animate = false) => {
-        currentIndex = (index + triggers.length) % triggers.length
-        const trigger = triggers[currentIndex]
+        currentIndex = (index + orderedTriggers.length) % orderedTriggers.length
+        const trigger = orderedTriggers[currentIndex]
         const src = trigger?.dataset.fullImage ?? ''
         const alt = trigger?.dataset.imageAlt ?? ''
+        const currentChangeId = ++imageChangeId
 
         window.clearTimeout(changeTimer)
 
         const applyImage = () => {
           fullImage.src = src
           fullImage.alt = alt
-          counter.textContent = `${currentIndex + 1} / ${triggers.length}`
-          fullImage.classList.remove('is-changing')
+          counter.textContent = `${currentIndex + 1} / ${orderedTriggers.length}`
           preloadAdjacentImages()
+
+          const revealImage = () => {
+            if (currentChangeId !== imageChangeId) return
+
+            window.requestAnimationFrame(() => {
+              window.requestAnimationFrame(() => fullImage.classList.remove('is-changing'))
+            })
+          }
+
+          if (!animate || fullImage.complete) {
+            revealImage()
+          } else {
+            fullImage.addEventListener('load', revealImage, { once: true })
+          }
         }
 
         if (animate) {
           fullImage.classList.add('is-changing')
-          changeTimer = window.setTimeout(applyImage, 120)
+          changeTimer = window.setTimeout(applyImage, 140)
         } else {
           applyImage()
         }
       }
 
       const openGallery = (index: number) => {
+        dialog.classList.remove('is-image-ready')
         updateImage(index)
+        const currentChangeId = imageChangeId
         dialog.showModal()
         document.documentElement.classList.add('lightbox-open')
+
         window.requestAnimationFrame(() => {
           window.requestAnimationFrame(() => dialog.classList.add('is-open'))
         })
+
+        void fullImage
+          .decode()
+          .catch(() => undefined)
+          .then(() => {
+            if (!dialog.open || currentChangeId !== imageChangeId) return
+            dialog.classList.add('is-image-ready')
+          })
       }
 
       const closeGallery = () => {
         if (!dialog.open || dialog.classList.contains('is-closing')) return
 
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        dialog.classList.remove('is-open')
+        dialog.classList.remove('is-open', 'is-image-ready')
 
         if (reducedMotion) {
           dialog.close()
@@ -150,11 +207,14 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         }
 
         dialog.classList.add('is-closing')
-        closeTimer = window.setTimeout(() => dialog.close(), 180)
+        closeTimer = window.setTimeout(() => dialog.close(), 360)
       }
 
-      triggers.forEach((trigger, index) => {
-        trigger.addEventListener('click', () => openGallery(index))
+      triggers.forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          refreshTriggerOrder()
+          openGallery(Math.max(orderedTriggers.indexOf(trigger), 0))
+        })
       })
 
       previousButton.addEventListener('click', () => updateImage(currentIndex - 1, true))
@@ -206,9 +266,10 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
       )
 
       dialog.addEventListener('close', () => {
+        imageChangeId += 1
         window.clearTimeout(changeTimer)
         window.clearTimeout(closeTimer)
-        dialog.classList.remove('is-open', 'is-closing')
+        dialog.classList.remove('is-open', 'is-image-ready', 'is-closing')
         fullImage.classList.remove('is-changing')
         fullImage.removeAttribute('src')
         fullImage.alt = ''
