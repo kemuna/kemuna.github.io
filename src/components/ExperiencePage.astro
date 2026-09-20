@@ -51,7 +51,7 @@ const wonderlandGallery = await Promise.all(
 
     <div class="experience-list">
       <article class="experience-item">
-        <div>
+        <div data-scroll-reveal>
           <h2>{t.currentExperienceRole}</h2>
           <p>
             <a class="company-link" href="https://assol.in.ua/" target="_blank" rel="noreferrer">
@@ -60,38 +60,40 @@ const wonderlandGallery = await Promise.all(
             </a>
           </p>
         </div>
-        <div class="experience-meta">
+        <div class="experience-meta" data-scroll-reveal>
           <p>{t.currentExperienceLocation}</p>
           <p>{t.currentExperiencePeriod}</p>
         </div>
         <div class="experience-details">
-          <p>{t.currentExperienceDescription}</p>
+          <p data-scroll-reveal>{t.currentExperienceDescription}</p>
 
-          <div class="experience-block">
+          <div class="experience-block" data-scroll-reveal>
             <h3>{t.responsibilitiesTitle}</h3>
             <ul class="responsibility-list">
               {t.currentExperienceResponsibilities.map((item) => <li>{item}</li>)}
             </ul>
           </div>
 
-          <div class="experience-block">
+          <div class="experience-block" data-scroll-reveal>
             <h3>{t.projectsTitle}</h3>
             <p>{t.currentExperienceProjects}</p>
           </div>
 
-          <div class="experience-block">
+          <div class="experience-block" data-scroll-reveal>
             <h3>{t.skillsTitle}</h3>
             <ul class="skill-list">
               {t.currentExperienceSkills.map((item) => <li>{item}</li>)}
             </ul>
           </div>
 
-          <div class="gallery-placeholder">{t.experienceGalleryPlaceholder}</div>
+          <div class="gallery-placeholder" data-scroll-reveal>
+            {t.experienceGalleryPlaceholder}
+          </div>
         </div>
       </article>
 
       <article class="experience-item">
-        <div>
+        <div data-scroll-reveal>
           <h2>{t.experienceRole}</h2>
           <p>
             <a
@@ -105,21 +107,21 @@ const wonderlandGallery = await Promise.all(
             </a>
           </p>
         </div>
-        <div class="experience-meta">
+        <div class="experience-meta" data-scroll-reveal>
           <p>{t.experienceLocation}</p>
           <p>{t.experiencePeriod}</p>
         </div>
         <div class="experience-details">
-          <p>{t.experienceDescription}</p>
+          <p data-scroll-reveal>{t.experienceDescription}</p>
 
-          <div class="experience-block">
+          <div class="experience-block" data-scroll-reveal>
             <h3>{t.responsibilitiesTitle}</h3>
             <ul class="responsibility-list">
               {t.experienceResponsibilities.map((item) => <li>{item}</li>)}
             </ul>
           </div>
 
-          <div class="experience-block">
+          <div class="experience-block" data-scroll-reveal>
             <h3>{t.projectsTitle}</h3>
             <div class="project-summary">
               <a
@@ -135,14 +137,14 @@ const wonderlandGallery = await Promise.all(
             </div>
           </div>
 
-          <div class="experience-block">
+          <div class="experience-block" data-scroll-reveal>
             <h3>{t.skillsTitle}</h3>
             <ul class="skill-list">
               {t.experienceSkills.map((item) => <li>{item}</li>)}
             </ul>
           </div>
 
-          <div class="experience-block">
+          <div class="experience-block" data-scroll-reveal>
             <h3>{t.galleryTitle}</h3>
             <GalleryLightbox
               closeLabel={t.closeImageLabel}

@@ -31,6 +31,10 @@ html {
   scroll-behavior: smooth;
 }
 
+html[data-astro-transition='language'] {
+  scroll-behavior: auto;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -845,15 +849,51 @@ portfolio-gallery {
   }
 }
 
+@keyframes page-language-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-language-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+html[data-astro-transition='language']::view-transition-old(page-content) {
+  animation: page-language-fade-out 220ms cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+
+html[data-astro-transition='language']::view-transition-new(page-content) {
+  animation: page-language-fade-in 220ms cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+
+html[data-astro-transition='language'][data-astro-transition-fallback='old']
+  main[data-astro-transition-scope] {
+  animation: page-language-fade-out 220ms cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+
+html[data-astro-transition='language'][data-astro-transition-fallback='new']
+  main[data-astro-transition-scope] {
+  animation: page-language-fade-in 220ms cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+
 .profile-photo-frame,
 .about-content > h1,
 .alias,
 .role,
 .biography,
 .page-section > .page-title,
-.page-section > .muted,
-.experience-item,
-.work-item {
+.page-section > .muted {
   animation: content-reveal 520ms var(--ease-out) both;
 }
 
@@ -879,16 +919,20 @@ portfolio-gallery {
   animation-delay: 240ms;
 }
 
-.experience-item:first-child {
-  animation-delay: 120ms;
+[data-scroll-reveal] {
+  transition: opacity 560ms ease, transform 620ms var(--ease-out);
+  transition-delay: var(--scroll-reveal-delay, 0ms);
 }
 
-.experience-item:nth-child(2) {
-  animation-delay: 210ms;
+[data-scroll-reveal].is-reveal-pending {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  will-change: opacity, transform;
 }
 
-.work-item {
-  animation-delay: var(--reveal-delay, 100ms);
+[data-scroll-reveal].is-reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 :focus-visible {

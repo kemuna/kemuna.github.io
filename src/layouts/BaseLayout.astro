@@ -1,5 +1,5 @@
 ---
-import { ClientRouter, fade } from 'astro:transitions'
+import { ClientRouter, slide } from 'astro:transitions'
 import '@fontsource-variable/manrope'
 import '@fontsource-variable/onest'
 import '../style.css'
@@ -35,7 +35,7 @@ const currentPath = `/${language}/${pagePaths[currentPage]}`
 const alternatePath = `/${alternateLanguage}/${pagePaths[currentPage]}`
 const canonicalUrl = new URL(currentPath, Astro.site)
 const alternateUrl = new URL(alternatePath, Astro.site)
-const pageTransition = fade({ duration: '220ms' })
+const pageTransition = slide({ duration: '360ms' })
 ---
 
 <!doctype html>
@@ -80,6 +80,7 @@ const pageTransition = fade({ duration: '220ms' })
               class:list={{ 'is-active': currentPage === item.id }}
               href={`/${language}/${pagePaths[item.id]}`}
               aria-current={currentPage === item.id ? 'page' : undefined}
+              data-astro-prefetch="viewport"
             >
               {item.label}
             </a>
@@ -113,11 +114,15 @@ const pageTransition = fade({ duration: '220ms' })
       </div>
     </header>
 
-    <main id="main" transition:animate={pageTransition}>
+    <main
+      id="main"
+      transition:name="page-content"
+      transition:animate={pageTransition}
+    >
       <slot />
     </main>
 
-    <footer id="contact" class="site-footer">
+    <footer id="contact" class="site-footer" data-scroll-reveal>
       <ul class="footer-contacts" aria-label={t.contactLabel}>
         <li>
           <a
@@ -167,23 +172,107 @@ const pageTransition = fade({ duration: '220ms' })
     </footer>
 
     <script>
-      document.addEventListener('click', (event) => {
-        const target = event.target
-        if (!(target instanceof Element)) return
+      let scrollRevealObserver: IntersectionObserver | undefined
 
-        const link = target.closest<HTMLAnchorElement>('[data-language-link]')
-        const language = link?.dataset.languageLink
+      const setupScrollReveal = () => {
+        scrollRevealObserver?.disconnect()
 
-        if (link && (language === 'en' || language === 'uk')) {
-          try {
-            localStorage.setItem('kemuna-language', language)
-          } catch {
-            // Language navigation still works when browser storage is unavailable.
-          }
+        const elements = Array.from(
+          document.querySelectorAll<HTMLElement>('[data-scroll-reveal]'),
+        )
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-          link.hash = window.location.hash
+        if (reducedMotion || !('IntersectionObserver' in window)) {
+          elements.forEach((element) => {
+            element.classList.remove('is-reveal-pending')
+            element.classList.add('is-reveal-visible')
+          })
+          return
         }
+
+        elements.forEach((element) => {
+          element.classList.remove('is-reveal-visible')
+          element.classList.add('is-reveal-pending')
+        })
+
+        scrollRevealObserver = new IntersectionObserver(
+          (entries, observer) => {
+            const visibleEntries = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((first, second) => {
+                const verticalDifference = first.boundingClientRect.top - second.boundingClientRect.top
+
+                if (Math.abs(verticalDifference) > 24) return verticalDifference
+                return first.boundingClientRect.left - second.boundingClientRect.left
+              })
+
+            visibleEntries.forEach((entry, index) => {
+              const element = entry.target as HTMLElement
+              element.style.setProperty('--scroll-reveal-delay', `${Math.min(index * 55, 220)}ms`)
+              element.classList.remove('is-reveal-pending')
+              element.classList.add('is-reveal-visible')
+              observer.unobserve(element)
+            })
+          },
+          {
+            rootMargin: '0px 0px -8% 0px',
+            threshold: 0.08,
+          },
+        )
+
+        elements.forEach((element) => scrollRevealObserver?.observe(element))
+      }
+
+      setupScrollReveal()
+      document.addEventListener('astro:after-swap', setupScrollReveal)
+
+      const getPagePosition = (url: URL) => {
+        const pathParts = url.pathname.split('/').filter(Boolean)
+        const pagePath = pathParts[1] ?? ''
+
+        if (pagePath === '') return 0
+        if (pagePath === 'experience') return 1
+        if (pagePath === 'work') return 2
+
+        return null
+      }
+
+      document.addEventListener('astro:before-preparation', (event) => {
+        const fromPosition = getPagePosition(event.from)
+        const toPosition = getPagePosition(event.to)
+
+        if (fromPosition === null || toPosition === null) return
+
+        if (fromPosition === toPosition) {
+          event.to.hash = event.from.hash
+          event.direction = 'language'
+          return
+        }
+
+        event.direction = toPosition > fromPosition ? 'forward' : 'back'
       })
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          const target = event.target
+          if (!(target instanceof Element)) return
+
+          const link = target.closest<HTMLAnchorElement>('[data-language-link]')
+          const language = link?.dataset.languageLink
+
+          if (link && (language === 'en' || language === 'uk')) {
+            try {
+              localStorage.setItem('kemuna-language', language)
+            } catch {
+              // Language navigation still works when browser storage is unavailable.
+            }
+
+            link.hash = window.location.hash
+          }
+        },
+        { capture: true },
+      )
     </script>
   </body>
 </html>
