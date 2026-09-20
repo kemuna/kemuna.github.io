@@ -87,11 +87,90 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
       let changeTimer = 0
       let closeTimer = 0
       let imageChangeId = 0
+      let activeTrigger: HTMLButtonElement | undefined
+      let sharedImageAnimation: Animation | undefined
+      let sharedImageClone: HTMLImageElement | undefined
       let touchStartX = 0
       let touchStartY = 0
 
+      const switchClasses = [
+        'is-leaving-next',
+        'is-leaving-previous',
+        'is-entering-next',
+        'is-entering-previous',
+        'is-positioning',
+      ]
+
       previousButton.hidden = triggers.length < 2
       nextButton.hidden = triggers.length < 2
+
+      const getRenderedImageRect = (trigger: HTMLButtonElement) => {
+        const image = trigger.querySelector('img')
+        if (!(image instanceof HTMLImageElement)) return trigger.getBoundingClientRect()
+
+        const bounds = image.getBoundingClientRect()
+        if (image.naturalWidth === 0 || image.naturalHeight === 0) return bounds
+
+        const scale = Math.min(
+          bounds.width / image.naturalWidth,
+          bounds.height / image.naturalHeight,
+        )
+        const width = image.naturalWidth * scale
+        const height = image.naturalHeight * scale
+
+        return new DOMRect(
+          bounds.left + (bounds.width - width) / 2,
+          bounds.top + (bounds.height - height) / 2,
+          width,
+          height,
+        )
+      }
+
+      const getSharedTransform = (source: DOMRect, destination: DOMRect) => {
+        const sourceCenterX = source.left + source.width / 2
+        const sourceCenterY = source.top + source.height / 2
+        const destinationCenterX = destination.left + destination.width / 2
+        const destinationCenterY = destination.top + destination.height / 2
+
+        return `translate3d(${sourceCenterX - destinationCenterX}px, ${sourceCenterY - destinationCenterY}px, 0) scale(${source.width / destination.width}, ${source.height / destination.height})`
+      }
+
+      const isVisibleInViewport = (rect: DOMRect) =>
+        rect.width > 0 &&
+        rect.height > 0 &&
+        rect.bottom > 0 &&
+        rect.right > 0 &&
+        rect.top < window.innerHeight &&
+        rect.left < window.innerWidth
+
+      const clearSharedImage = () => {
+        sharedImageAnimation?.cancel()
+        sharedImageAnimation = undefined
+        sharedImageClone?.remove()
+        sharedImageClone = undefined
+      }
+
+      const createSharedImage = (rect: DOMRect, src: string) => {
+        const image = document.createElement('img')
+        image.className = 'lightbox-shared-image'
+        image.src = src
+        image.alt = ''
+        image.setAttribute('aria-hidden', 'true')
+        image.style.left = `${rect.left}px`
+        image.style.top = `${rect.top}px`
+        image.style.width = `${rect.width}px`
+        image.style.height = `${rect.height}px`
+        dialog.append(image)
+        sharedImageClone = image
+        return image
+      }
+
+      const showFullImageImmediately = () => {
+        fullImage.style.transition = 'none'
+        fullImage.classList.remove('is-shared-hidden')
+        void fullImage.offsetWidth
+        window.requestAnimationFrame(() => fullImage.style.removeProperty('transition'))
+      }
 
       const refreshTriggerOrder = () => {
         const columns = new Map<
@@ -137,9 +216,10 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         })
       }
 
-      const updateImage = (index: number, animate = false) => {
+      const updateImage = (index: number, animate = false, direction: -1 | 1 = 1) => {
         currentIndex = (index + orderedTriggers.length) % orderedTriggers.length
         const trigger = orderedTriggers[currentIndex]
+        activeTrigger = trigger
         const src = trigger?.dataset.fullImage ?? ''
         const alt = trigger?.dataset.imageAlt ?? ''
         const currentChangeId = ++imageChangeId
@@ -155,8 +235,28 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
           const revealImage = () => {
             if (currentChangeId !== imageChangeId) return
 
+            if (animate) {
+              const leavingClass = direction > 0 ? 'is-leaving-next' : 'is-leaving-previous'
+              const enteringClass = direction > 0 ? 'is-entering-next' : 'is-entering-previous'
+
+              fullImage.classList.add('is-positioning')
+              fullImage.classList.remove(leavingClass)
+              fullImage.classList.add(enteringClass)
+              void fullImage.offsetWidth
+
+              window.requestAnimationFrame(() => {
+                if (currentChangeId !== imageChangeId) return
+
+                fullImage.classList.remove('is-positioning')
+                void fullImage.offsetWidth
+
+                window.requestAnimationFrame(() => fullImage.classList.remove(enteringClass))
+              })
+              return
+            }
+
             window.requestAnimationFrame(() => {
-              window.requestAnimationFrame(() => fullImage.classList.remove('is-changing'))
+              window.requestAnimationFrame(() => fullImage.classList.remove(...switchClasses))
             })
           }
 
@@ -168,14 +268,25 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         }
 
         if (animate) {
-          fullImage.classList.add('is-changing')
-          changeTimer = window.setTimeout(applyImage, 140)
+          fullImage.classList.remove(...switchClasses)
+          fullImage.classList.add(direction > 0 ? 'is-leaving-next' : 'is-leaving-previous')
+          changeTimer = window.setTimeout(applyImage, 340)
         } else {
+          fullImage.classList.remove(...switchClasses)
           applyImage()
         }
       }
 
       const openGallery = (index: number) => {
+        const trigger = orderedTriggers[(index + orderedTriggers.length) % orderedTriggers.length]
+        const sourceRect = trigger ? getRenderedImageRect(trigger) : undefined
+        const sourceImage = trigger?.querySelector('img')
+        const previewSrc =
+          sourceImage instanceof HTMLImageElement ? sourceImage.currentSrc || sourceImage.src : ''
+
+        clearSharedImage()
+        fullImage.classList.add('is-shared-hidden')
+        dialog.classList.add('is-shared-opening')
         dialog.classList.remove('is-image-ready')
         updateImage(index)
         const currentChangeId = imageChangeId
@@ -192,20 +303,120 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
           .then(() => {
             if (!dialog.open || currentChangeId !== imageChangeId) return
             dialog.classList.add('is-image-ready')
+
+            window.requestAnimationFrame(() => {
+              const destinationRect = fullImage.getBoundingClientRect()
+              const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+              if (
+                !sourceRect ||
+                !isVisibleInViewport(sourceRect) ||
+                !isVisibleInViewport(destinationRect) ||
+                !previewSrc ||
+                reducedMotion
+              ) {
+                showFullImageImmediately()
+                dialog.classList.remove('is-shared-opening')
+                return
+              }
+
+              const sharedImage = createSharedImage(destinationRect, previewSrc)
+              const animation = sharedImage.animate(
+                [
+                  {
+                    borderRadius: '0.5rem',
+                    transform: getSharedTransform(sourceRect, destinationRect),
+                  },
+                  {
+                    borderRadius: '0.125rem',
+                    transform: 'translate3d(0, 0, 0) scale(1)',
+                  },
+                ],
+                {
+                  duration: 520,
+                  easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                  fill: 'both',
+                },
+              )
+
+              sharedImageAnimation = animation
+              void animation.finished
+                .catch(() => undefined)
+                .finally(() => {
+                  if (sharedImageAnimation !== animation) return
+                  showFullImageImmediately()
+                  dialog.classList.remove('is-shared-opening')
+                  sharedImageAnimation = undefined
+                  window.requestAnimationFrame(() => {
+                    window.requestAnimationFrame(() => {
+                      sharedImage.remove()
+                      if (sharedImageClone === sharedImage) sharedImageClone = undefined
+                    })
+                  })
+                })
+            })
           })
       }
 
       const closeGallery = () => {
-        if (!dialog.open || dialog.classList.contains('is-closing')) return
+        if (
+          !dialog.open ||
+          dialog.classList.contains('is-closing') ||
+          dialog.classList.contains('is-shared-closing')
+        ) {
+          return
+        }
 
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        dialog.classList.remove('is-open', 'is-image-ready')
 
         if (reducedMotion) {
+          dialog.classList.remove('is-open', 'is-image-ready')
           dialog.close()
           return
         }
 
+        const targetRect = activeTrigger ? getRenderedImageRect(activeTrigger) : undefined
+        const sourceRect = fullImage.getBoundingClientRect()
+
+        if (targetRect && isVisibleInViewport(targetRect) && sourceRect.width > 0) {
+          clearSharedImage()
+          const sharedImage = createSharedImage(sourceRect, fullImage.currentSrc || fullImage.src)
+          fullImage.classList.add('is-shared-hidden')
+          dialog.classList.remove('is-shared-opening')
+          dialog.classList.add('is-shared-closing')
+          dialog.classList.remove('is-open')
+
+          const animation = sharedImage.animate(
+            [
+              {
+                borderRadius: '0.125rem',
+                transform: 'translate3d(0, 0, 0) scale(1)',
+              },
+              {
+                borderRadius: '0.5rem',
+                transform: getSharedTransform(targetRect, sourceRect),
+              },
+            ],
+            {
+              duration: 420,
+              easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+              fill: 'both',
+            },
+          )
+
+          sharedImageAnimation = animation
+          closeTimer = window.setTimeout(() => dialog.close(), 480)
+          void animation.finished
+            .catch(() => undefined)
+            .finally(() => {
+              if (sharedImageAnimation !== animation) return
+              sharedImageAnimation = undefined
+              if (dialog.open) dialog.close()
+            })
+          return
+        }
+
+        dialog.classList.remove('is-open', 'is-image-ready')
         dialog.classList.add('is-closing')
         closeTimer = window.setTimeout(() => dialog.close(), 360)
       }
@@ -217,8 +428,8 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         })
       })
 
-      previousButton.addEventListener('click', () => updateImage(currentIndex - 1, true))
-      nextButton.addEventListener('click', () => updateImage(currentIndex + 1, true))
+      previousButton.addEventListener('click', () => updateImage(currentIndex - 1, true, -1))
+      nextButton.addEventListener('click', () => updateImage(currentIndex + 1, true, 1))
       closeButton.addEventListener('click', closeGallery)
 
       dialog.addEventListener('cancel', (event) => {
@@ -227,8 +438,8 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
       })
 
       dialog.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft') updateImage(currentIndex - 1, true)
-        if (event.key === 'ArrowRight') updateImage(currentIndex + 1, true)
+        if (event.key === 'ArrowLeft') updateImage(currentIndex - 1, true, -1)
+        if (event.key === 'ArrowRight') updateImage(currentIndex + 1, true, 1)
       })
 
       dialog.addEventListener('click', (event) => {
@@ -260,17 +471,26 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
           const distanceY = touch.clientY - touchStartY
 
           if (Math.abs(distanceX) < 50 || Math.abs(distanceX) <= Math.abs(distanceY)) return
-          updateImage(currentIndex + (distanceX < 0 ? 1 : -1), true)
+          const direction = distanceX < 0 ? 1 : -1
+          updateImage(currentIndex + direction, true, direction)
         },
         { passive: true },
       )
 
       dialog.addEventListener('close', () => {
         imageChangeId += 1
+        clearSharedImage()
         window.clearTimeout(changeTimer)
         window.clearTimeout(closeTimer)
-        dialog.classList.remove('is-open', 'is-image-ready', 'is-closing')
-        fullImage.classList.remove('is-changing')
+        dialog.classList.remove(
+          'is-open',
+          'is-image-ready',
+          'is-closing',
+          'is-shared-opening',
+          'is-shared-closing',
+        )
+        fullImage.classList.remove('is-shared-hidden', ...switchClasses)
+        fullImage.style.removeProperty('transition')
         fullImage.removeAttribute('src')
         fullImage.alt = ''
         document.documentElement.classList.remove('lightbox-open')
