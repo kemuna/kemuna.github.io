@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { translations, type Language } from '../i18n'
+
+interface Props {
+  language: Language
+}
+
+const { language } = Astro.props
+const t = translations[language]
+---
+
+<BaseLayout
+  language={language}
+  currentPage="not-found"
+  title={`${t.notFoundTitle} — Kemuna`}
+  description={t.notFoundDescription}
+>
+  <section class="page-section not-found-page" aria-labelledby="not-found-title">
+    <p class="not-found-code" aria-hidden="true" data-scroll-reveal>404</p>
+
+    <div class="not-found-content" data-scroll-reveal>
+      <h1 id="not-found-title">{t.notFoundTitle}</h1>
+      <p>{t.notFoundDescription}</p>
+      <a class="not-found-action" href={`/${language}/`}>{t.notFoundAction}</a>
+    </div>
+  </section>
+</BaseLayout>

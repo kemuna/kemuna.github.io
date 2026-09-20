@@ -15,8 +15,14 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
   <dialog class="image-lightbox" aria-label={dialogLabel}>
     <div class="lightbox-shell">
       <div class="lightbox-toolbar">
-        <span class="lightbox-counter" aria-live="polite"></span>
-        <button class="lightbox-close" type="button" aria-label={closeLabel} title={closeLabel}>
+        <span class="lightbox-counter" role="status" aria-live="polite" aria-atomic="true"></span>
+        <button
+          class="lightbox-close"
+          type="button"
+          aria-label={closeLabel}
+          aria-keyshortcuts="Escape"
+          title={closeLabel}
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="m5 5 14 14M19 5 5 19"></path>
           </svg>
@@ -27,6 +33,7 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         class="lightbox-navigation lightbox-previous"
         type="button"
         aria-label={previousLabel}
+        aria-keyshortcuts="ArrowLeft"
         title={previousLabel}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -42,6 +49,7 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         class="lightbox-navigation lightbox-next"
         type="button"
         aria-label={nextLabel}
+        aria-keyshortcuts="ArrowRight"
         title={nextLabel}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -292,6 +300,7 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         const currentChangeId = imageChangeId
         dialog.showModal()
         document.documentElement.classList.add('lightbox-open')
+        closeButton.focus({ preventScroll: true })
 
         window.requestAnimationFrame(() => {
           window.requestAnimationFrame(() => dialog.classList.add('is-open'))
@@ -456,8 +465,25 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
       })
 
       dialog.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft') updateImage(currentIndex - 1, true, -1)
-        if (event.key === 'ArrowRight') updateImage(currentIndex + 1, true, 1)
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault()
+          updateImage(currentIndex - 1, true, -1)
+        }
+
+        if (event.key === 'ArrowRight') {
+          event.preventDefault()
+          updateImage(currentIndex + 1, true, 1)
+        }
+
+        if (event.key === 'Home') {
+          event.preventDefault()
+          updateImage(0, true, -1)
+        }
+
+        if (event.key === 'End') {
+          event.preventDefault()
+          updateImage(orderedTriggers.length - 1, true, 1)
+        }
       })
 
       dialog.addEventListener('click', (event) => {
@@ -512,6 +538,8 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         fullImage.removeAttribute('src')
         fullImage.alt = ''
         document.documentElement.classList.remove('lightbox-open')
+
+        if (activeTrigger?.isConnected) activeTrigger.focus({ preventScroll: true })
       })
     }
   }

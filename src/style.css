@@ -174,17 +174,24 @@ ul {
 
 .skip-link {
   position: fixed;
-  z-index: 10;
+  z-index: 100;
   top: 0.5rem;
   left: 0.5rem;
   padding: 0.75rem;
+  border-radius: 0.4rem;
   color: var(--background);
   background: var(--accent);
-  transform: translateY(-150%);
+  font-weight: 700;
+  text-decoration: none;
+  clip-path: inset(50%);
+  opacity: 0;
+  white-space: nowrap;
 }
 
-.skip-link:focus {
-  transform: translateY(0);
+.skip-link:focus,
+.skip-link:focus-visible {
+  clip-path: none;
+  opacity: 1;
 }
 
 .site-header,
@@ -397,6 +404,59 @@ main {
   min-width: 0;
   min-height: 34rem;
   padding-block: clamp(3rem, 8vw, 6rem);
+}
+
+.not-found-page {
+  display: grid;
+  min-height: calc(100svh - var(--header-height) - 4.5rem);
+  grid-template-columns: minmax(0, 0.9fr) minmax(18rem, 1.1fr);
+  align-items: center;
+  gap: clamp(2rem, 7vw, 7rem);
+}
+
+.not-found-code {
+  font-family: var(--font-heading);
+  font-size: clamp(8rem, 24vw, 18rem);
+  font-weight: 700;
+  line-height: 0.75;
+  letter-spacing: -0.08em;
+  color: var(--accent);
+  opacity: 0.82;
+}
+
+.not-found-content h1 {
+  font-size: clamp(3rem, 7vw, 6rem);
+}
+
+.not-found-content p {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.not-found-action {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--accent-border);
+  border-radius: 0.5rem;
+  color: var(--text);
+  background: var(--accent-soft);
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-color var(--motion-fast) ease, color var(--motion-fast) ease,
+    background var(--motion-fast) ease, transform var(--motion-base) var(--ease-out);
+}
+
+.not-found-action:hover,
+.not-found-action:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--surface-raised);
+  transform: translateY(-2px);
 }
 
 .about-page {
@@ -1254,8 +1314,12 @@ html[data-astro-transition='language'][data-astro-transition-fallback='new']
 }
 
 :focus-visible {
-  outline: 2px solid currentColor;
+  outline: 3px solid var(--accent);
   outline-offset: 4px;
+}
+
+main[tabindex='-1']:focus {
+  outline: none;
 }
 
 @media (max-width: 900px) {
@@ -1325,6 +1389,16 @@ html[data-astro-transition='language'][data-astro-transition-fallback='new']
   .page-section {
     min-height: 0;
     padding-block: 2.5rem 3.5rem;
+  }
+
+  .not-found-page {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 2.5rem;
+  }
+
+  .not-found-code {
+    font-size: clamp(7rem, 42vw, 10rem);
   }
 
   h1 {

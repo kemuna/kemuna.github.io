@@ -5,7 +5,7 @@ import '@fontsource-variable/onest'
 import '../style.css'
 import { languageNames, translations, type Language } from '../i18n'
 
-type PageId = 'about' | 'experience' | 'work'
+type PageId = 'about' | 'experience' | 'work' | 'not-found'
 
 interface Props {
   language: Language
@@ -23,6 +23,7 @@ const pagePaths: Record<PageId, string> = {
   about: '',
   experience: 'experience/',
   work: 'work/',
+  'not-found': '404/',
 }
 
 const navigation = [
@@ -158,6 +159,7 @@ const pageTransition = slide({ duration: '360ms' })
 
     <main
       id="main"
+      tabindex="-1"
       transition:name="page-content"
       transition:animate={pageTransition}
     >

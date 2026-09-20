@@ -45,9 +45,9 @@
   "previousImageLabel": "Previous image",
   "nextImageLabel": "Next image",
   "experienceGalleryItems": [
-    "Adventure scene artwork created for Numberphile",
-    "Adventure scene artwork created for Numberphile",
-    "Adventure scene artwork created for Numberphile",
+    "Underwater adventure scene created for Numberphile",
+    "Desert adventure scene created for Numberphile",
+    "Snowy mountain adventure scene created for Numberphile",
     "Numberphile main menu screen",
     "Adventure selection screen from Numberphile",
     "Numberphile gameplay screen"
@@ -99,5 +99,8 @@
     "Adobe Photoshop",
     "Midjourney",
     "Jira"
-  ]
+  ],
+  "notFoundTitle": "Page not found",
+  "notFoundDescription": "The page may have been moved, deleted, or the address may be incorrect.",
+  "notFoundAction": "Return to portfolio"
 }
