@@ -19,18 +19,22 @@ const t = translations[language]
   description={t.pageDescription}
 >
   <section class="page-section about-page" aria-labelledby="page-title">
-    <div class="profile-photo-frame">
-      <Image
-        class="profile-photo"
-        src={profilePhoto}
-        alt={t.profilePhotoAlt}
-        widths={[320, 480, 720, 960]}
-        sizes="(max-width: 900px) min(calc(100vw - 2rem), 28rem), 36vw"
-        format="webp"
-        quality={85}
-        loading="eager"
-        fetchpriority="high"
-      />
+    <div class="profile-photo-drift">
+      <div class="profile-photo-float">
+        <div class="profile-photo-frame">
+          <Image
+            class="profile-photo"
+            src={profilePhoto}
+            alt={t.profilePhotoAlt}
+            widths={[320, 480, 720, 960]}
+            sizes="(max-width: 900px) min(calc(100vw - 2rem), 28rem), 36vw"
+            format="webp"
+            quality={85}
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
     </div>
 
     <div class="about-content">

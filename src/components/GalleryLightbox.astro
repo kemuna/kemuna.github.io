@@ -381,37 +381,55 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         if (targetRect && isVisibleInViewport(targetRect) && sourceRect.width > 0) {
           clearSharedImage()
           const sharedImage = createSharedImage(sourceRect, fullImage.currentSrc || fullImage.src)
-          fullImage.classList.add('is-shared-hidden')
           dialog.classList.remove('is-shared-opening')
           dialog.classList.add('is-shared-closing')
-          dialog.classList.remove('is-open')
 
-          const animation = sharedImage.animate(
-            [
-              {
-                borderRadius: '0.125rem',
-                transform: 'translate3d(0, 0, 0) scale(1)',
-              },
-              {
-                borderRadius: '0.5rem',
-                transform: getSharedTransform(targetRect, sourceRect),
-              },
-            ],
-            {
-              duration: 420,
-              easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-              fill: 'both',
-            },
-          )
-
-          sharedImageAnimation = animation
-          closeTimer = window.setTimeout(() => dialog.close(), 480)
-          void animation.finished
+          void sharedImage
+            .decode()
             .catch(() => undefined)
-            .finally(() => {
-              if (sharedImageAnimation !== animation) return
-              sharedImageAnimation = undefined
-              if (dialog.open) dialog.close()
+            .then(() => {
+              window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(() => {
+                  if (!dialog.open || sharedImageClone !== sharedImage) return
+
+                  fullImage.classList.add('is-shared-hidden')
+                  dialog.classList.remove('is-open')
+
+                  const animation = sharedImage.animate(
+                    [
+                      {
+                        borderRadius: '0.125rem',
+                        transform: 'translate3d(0, 0, 0) scale(1)',
+                      },
+                      {
+                        borderRadius: '0.5rem',
+                        transform: getSharedTransform(targetRect, sourceRect),
+                      },
+                    ],
+                    {
+                      duration: 420,
+                      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                      fill: 'both',
+                    },
+                  )
+
+                  sharedImageAnimation = animation
+                  closeTimer = window.setTimeout(() => dialog.close(), 500)
+                  void animation.finished
+                    .catch(() => undefined)
+                    .finally(() => {
+                      if (sharedImageAnimation !== animation) return
+
+                      window.requestAnimationFrame(() => {
+                        window.requestAnimationFrame(() => {
+                          if (sharedImageAnimation !== animation) return
+                          sharedImageAnimation = undefined
+                          if (dialog.open) dialog.close()
+                        })
+                      })
+                    })
+                })
+              })
             })
           return
         }

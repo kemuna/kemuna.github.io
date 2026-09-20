@@ -29,6 +29,7 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 html[data-astro-transition='language'] {
@@ -144,6 +145,7 @@ main,
 .site-header {
   position: fixed;
   z-index: 20;
+  isolation: isolate;
   top: 0;
   right: 0;
   left: 0;
@@ -152,10 +154,38 @@ main,
   grid-template-areas: 'wordmark navigation language';
   align-items: center;
   height: var(--header-height);
-  border-bottom: 1px solid var(--border);
+}
+
+.site-header::before,
+.site-footer::before {
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  inset-inline: 0;
+  border-color: var(--border);
   background: rgb(16 9 13 / 0.88);
   box-shadow: 0 0.75rem 2.5rem rgb(0 0 0 / 0.16);
+  content: '';
+  pointer-events: none;
   backdrop-filter: blur(14px) saturate(130%);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 clamp(1rem, 4vw, 4rem),
+    #000 calc(100% - clamp(1rem, 4vw, 4rem)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 clamp(1rem, 4vw, 4rem),
+    #000 calc(100% - clamp(1rem, 4vw, 4rem)),
+    transparent
+  );
+}
+
+.site-header::before {
+  border-bottom: 1px solid;
 }
 
 .wordmark {
@@ -263,6 +293,53 @@ main {
 
 .about-content {
   min-width: 0;
+}
+
+.profile-photo-drift {
+  transform: translateX(-0.18rem) rotate(-0.28deg);
+  will-change: transform;
+}
+
+.profile-photo-float {
+  filter: drop-shadow(0 0.5rem 1rem rgb(255 143 179 / 0.05));
+  transform: translate3d(0, 0.25rem, 0);
+  will-change: filter, transform;
+}
+
+.profile-photo-drift.is-levitating {
+  animation: profile-drift 9.5s ease-in-out 700ms infinite;
+}
+
+.profile-photo-drift.is-levitating .profile-photo-float {
+  animation: profile-levitate 6.5s ease-in-out 700ms infinite;
+}
+
+@keyframes profile-drift {
+  0%,
+  100% {
+    transform: translateX(-0.18rem) rotate(-0.28deg);
+  }
+
+  35% {
+    transform: translateX(0.22rem) rotate(0.12deg);
+  }
+
+  70% {
+    transform: translateX(-0.06rem) rotate(0.28deg);
+  }
+}
+
+@keyframes profile-levitate {
+  0%,
+  100% {
+    filter: drop-shadow(0 0.5rem 1rem rgb(255 143 179 / 0.05));
+    transform: translate3d(0, 0.25rem, 0);
+  }
+
+  50% {
+    filter: drop-shadow(0 1.65rem 1.9rem rgb(255 143 179 / 0.16));
+    transform: translate3d(0, -0.65rem, 0);
+  }
 }
 
 .profile-photo-frame {
@@ -871,6 +948,8 @@ portfolio-gallery {
 }
 
 .site-footer {
+  position: relative;
+  isolation: isolate;
   display: flex;
   min-height: 4.5rem;
   align-items: center;
@@ -878,12 +957,13 @@ portfolio-gallery {
   gap: 2rem;
   margin-top: auto;
   padding-block: 1rem;
-  border-top: 1px solid var(--border);
   color: var(--muted);
-  background: rgb(16 9 13 / 0.88);
   font-size: 0.875rem;
+}
+
+.site-footer::before {
+  border-top: 1px solid;
   box-shadow: 0 -0.75rem 2.5rem rgb(0 0 0 / 0.12);
-  backdrop-filter: blur(14px) saturate(130%);
 }
 
 .footer-contacts {

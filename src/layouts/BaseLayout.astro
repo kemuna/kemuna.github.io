@@ -226,6 +226,23 @@ const pageTransition = slide({ duration: '360ms' })
       setupScrollReveal()
       document.addEventListener('astro:after-swap', setupScrollReveal)
 
+      const restartProfileLevitation = () => {
+        const profilePhoto = document.querySelector<HTMLElement>('.profile-photo-drift')
+        if (!profilePhoto) return
+
+        profilePhoto.classList.remove('is-levitating')
+        void profilePhoto.offsetWidth
+
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            if (profilePhoto.isConnected) profilePhoto.classList.add('is-levitating')
+          })
+        })
+      }
+
+      restartProfileLevitation()
+      document.addEventListener('astro:page-load', restartProfileLevitation)
+
       const getPagePosition = (url: URL) => {
         const pathParts = url.pathname.split('/').filter(Boolean)
         const pagePath = pathParts[1] ?? ''
