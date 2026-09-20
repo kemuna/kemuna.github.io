@@ -5,6 +5,8 @@
   "skipLink": "Skip to content",
   "navLabel": "Main navigation",
   "languageLabel": "Language",
+  "lightThemeLabel": "Switch to light theme",
+  "darkThemeLabel": "Switch to dark theme",
   "contactLabel": "Contact links",
   "navWork": "My illustrations",
   "navAbout": "About me",

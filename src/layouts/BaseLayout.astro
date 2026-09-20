@@ -46,6 +46,28 @@ const pageTransition = slide({ duration: '360ms' })
     <meta name="robots" content="noindex, nofollow, noimageindex" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#10090d" />
+    <script is:inline>
+      (() => {
+        const storageKey = 'kemuna-theme'
+        let theme = 'dark'
+
+        try {
+          const savedTheme = localStorage.getItem(storageKey)
+          theme = savedTheme === 'dark' || savedTheme === 'light'
+            ? savedTheme
+            : window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        } catch {
+          theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        }
+
+        document.documentElement.dataset.theme = theme
+        document.documentElement.style.colorScheme = theme
+        document.querySelector('meta[name="theme-color"]')?.setAttribute(
+          'content',
+          theme === 'light' ? '#f8ebe8' : '#10090d',
+        )
+      })()
+    </script>
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -89,28 +111,48 @@ const pageTransition = slide({ duration: '360ms' })
         <a href="#contact">{t.navContact}</a>
       </nav>
 
-      <div class="language-switcher" aria-label={t.languageLabel}>
-        <a
-          class:list={{ 'is-active': language === 'en' }}
-          href={`/en/${pagePaths[currentPage]}`}
-          hreflang="en"
-          lang="en"
-          aria-current={language === 'en' ? 'page' : undefined}
-          data-language-link="en"
+      <div class="header-controls">
+        <button
+          class="theme-toggle"
+          type="button"
+          aria-label={t.lightThemeLabel}
+          title={t.lightThemeLabel}
+          data-theme-toggle
+          data-light-label={t.lightThemeLabel}
+          data-dark-label={t.darkThemeLabel}
         >
-          {languageNames.en}
-        </a>
-        <span aria-hidden="true">/</span>
-        <a
-          class:list={{ 'is-active': language === 'uk' }}
-          href={`/uk/${pagePaths[currentPage]}`}
-          hreflang="uk"
-          lang="uk"
-          aria-current={language === 'uk' ? 'page' : undefined}
-          data-language-link="uk"
-        >
-          {languageNames.uk}
-        </a>
+          <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="3.75"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>
+          </svg>
+          <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.25 15.2A8.5 8.5 0 0 1 8.8 3.75 8.5 8.5 0 1 0 20.25 15.2Z"></path>
+          </svg>
+        </button>
+
+        <div class="language-switcher" aria-label={t.languageLabel}>
+          <a
+            class:list={{ 'is-active': language === 'en' }}
+            href={`/en/${pagePaths[currentPage]}`}
+            hreflang="en"
+            lang="en"
+            aria-current={language === 'en' ? 'page' : undefined}
+            data-language-link="en"
+          >
+            {languageNames.en}
+          </a>
+          <span aria-hidden="true">/</span>
+          <a
+            class:list={{ 'is-active': language === 'uk' }}
+            href={`/uk/${pagePaths[currentPage]}`}
+            hreflang="uk"
+            lang="uk"
+            aria-current={language === 'uk' ? 'page' : undefined}
+            data-language-link="uk"
+          >
+            {languageNames.uk}
+          </a>
+        </div>
       </div>
     </header>
 
@@ -243,6 +285,50 @@ const pageTransition = slide({ duration: '360ms' })
       restartProfileLevitation()
       document.addEventListener('astro:page-load', restartProfileLevitation)
 
+      type ColorTheme = 'dark' | 'light'
+
+      const themeColors: Record<ColorTheme, string> = {
+        dark: '#10090d',
+        light: '#f8ebe8',
+      }
+
+      const getActiveTheme = (): ColorTheme =>
+        document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'
+
+      const syncThemeToggle = () => {
+        const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]')
+        if (!button) return
+
+        const isLight = getActiveTheme() === 'light'
+        const label = isLight ? button.dataset.darkLabel : button.dataset.lightLabel
+
+        if (label) {
+          button.setAttribute('aria-label', label)
+          button.title = label
+        }
+      }
+
+      const applyTheme = (theme: ColorTheme) => {
+        document.documentElement.dataset.theme = theme
+        document.documentElement.style.colorScheme = theme
+        document
+          .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+          ?.setAttribute('content', themeColors[theme])
+        syncThemeToggle()
+      }
+
+      syncThemeToggle()
+      document.addEventListener('astro:page-load', syncThemeToggle)
+
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = getActiveTheme()
+        event.newDocument.documentElement.dataset.theme = theme
+        event.newDocument.documentElement.style.colorScheme = theme
+        event.newDocument
+          .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+          ?.setAttribute('content', themeColors[theme])
+      })
+
       const getPagePosition = (url: URL) => {
         const pathParts = url.pathname.split('/').filter(Boolean)
         const pagePath = pathParts[1] ?? ''
@@ -274,6 +360,21 @@ const pageTransition = slide({ duration: '360ms' })
         (event) => {
           const target = event.target
           if (!(target instanceof Element)) return
+
+          const themeButton = target.closest<HTMLButtonElement>('[data-theme-toggle]')
+
+          if (themeButton) {
+            const theme: ColorTheme = getActiveTheme() === 'dark' ? 'light' : 'dark'
+            applyTheme(theme)
+
+            try {
+              localStorage.setItem('kemuna-theme', theme)
+            } catch {
+              // Theme switching still works when browser storage is unavailable.
+            }
+
+            return
+          }
 
           const link = target.closest<HTMLAnchorElement>('[data-language-link]')
           const language = link?.dataset.languageLink
