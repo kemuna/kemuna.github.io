@@ -298,6 +298,11 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         dialog.classList.remove('is-image-ready')
         updateImage(index)
         const currentChangeId = imageChangeId
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+        document.documentElement.style.setProperty(
+          '--scrollbar-compensation',
+          `${Math.max(0, scrollbarWidth)}px`,
+        )
         dialog.showModal()
         document.documentElement.classList.add('lightbox-open')
         closeButton.focus({ preventScroll: true })
@@ -538,6 +543,7 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         fullImage.removeAttribute('src')
         fullImage.alt = ''
         document.documentElement.classList.remove('lightbox-open')
+        document.documentElement.style.removeProperty('--scrollbar-compensation')
 
         if (activeTrigger?.isConnected) activeTrigger.focus({ preventScroll: true })
       })

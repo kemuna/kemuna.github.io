@@ -34,6 +34,15 @@
   --profile-frame-shadow: 0 1.2rem 3rem rgb(0 0 0 / 0.22), 0 0 2rem var(--accent-soft);
   --profile-frame-hover-shadow: 0 1.4rem 3.5rem rgb(0 0 0 / 0.28),
     0 0 2.5rem var(--accent-soft);
+  --scrollbar-track: #160c11;
+  --scrollbar-thumb: #9b506b;
+  --scrollbar-thumb-hover: #d06d8e;
+  --cursor-default: url('/cursors/arrow-dark.svg') 4 3, auto;
+  --cursor-interactive: url('/cursors/arrow-dark-interactive.svg') 4 3, pointer;
+  --cursor-active: url('/cursors/arrow-dark-active.svg') 4 3, pointer;
+  --cursor-text: url('/cursors/text-dark.svg') 16 16, text;
+  --cursor-zoom-in: url('/cursors/zoom-in-dark.svg') 14 14, zoom-in;
+  --cursor-zoom-out: url('/cursors/zoom-out-dark.svg') 14 14, zoom-out;
   --page-width: 72rem;
   --page-padding: clamp(1rem, 4vw, 3rem);
   --header-height: 4.5rem;
@@ -72,6 +81,15 @@ html[data-theme='light'] {
     0 0 1.25rem rgb(165 35 82 / 0.09);
   --profile-frame-hover-shadow: 0 1.15rem 2.6rem rgb(117 67 86 / 0.16),
     0 0 1.5rem rgb(165 35 82 / 0.11);
+  --scrollbar-track: #f0dcda;
+  --scrollbar-thumb: #9b3158;
+  --scrollbar-thumb-hover: #781f40;
+  --cursor-default: url('/cursors/arrow-light.svg') 4 3, auto;
+  --cursor-interactive: url('/cursors/arrow-light-interactive.svg') 4 3, pointer;
+  --cursor-active: url('/cursors/arrow-light-active.svg') 4 3, pointer;
+  --cursor-text: url('/cursors/text-light.svg') 16 16, text;
+  --cursor-zoom-in: url('/cursors/zoom-in-light.svg') 14 14, zoom-in;
+  --cursor-zoom-out: url('/cursors/zoom-out-light.svg') 14 14, zoom-out;
 }
 
 * {
@@ -80,7 +98,65 @@ html[data-theme='light'] {
 
 html {
   scroll-behavior: smooth;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   scrollbar-gutter: stable;
+  scrollbar-width: auto;
+}
+
+::-webkit-scrollbar {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 3rem;
+  border: 3px solid var(--scrollbar-track);
+  border-radius: 999px;
+  background: var(--scrollbar-thumb);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--scrollbar-track);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body,
+  ::view-transition {
+    cursor: var(--cursor-default);
+  }
+
+  a,
+  button {
+    cursor: var(--cursor-interactive);
+  }
+
+  a:active,
+  button:not(.experience-gallery-button):not(.work-gallery-button):active {
+    cursor: var(--cursor-active);
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  li,
+  input,
+  textarea,
+  [contenteditable='true'] {
+    cursor: var(--cursor-text);
+  }
 }
 
 html[data-astro-transition='language'] {
@@ -337,7 +413,7 @@ main,
   border-radius: 50%;
   color: var(--muted);
   background: var(--surface);
-  cursor: pointer;
+  cursor: var(--cursor-interactive);
   transition: border-color var(--motion-fast) ease, color var(--motion-fast) ease,
     background-color 320ms ease, box-shadow var(--motion-base) ease,
     transform var(--motion-base) var(--ease-out);
@@ -804,7 +880,7 @@ h4 {
   border-radius: 0.5rem;
   color: inherit;
   background: var(--surface);
-  cursor: zoom-in;
+  cursor: var(--cursor-zoom-in);
   transition: border-color var(--motion-fast) ease, box-shadow var(--motion-base) ease,
     transform var(--motion-base) var(--ease-out);
 }
@@ -831,6 +907,15 @@ h4 {
 
 html.lightbox-open {
   overflow: hidden;
+  scrollbar-gutter: auto;
+}
+
+html.lightbox-open body {
+  padding-right: var(--scrollbar-compensation, 0px);
+}
+
+html.lightbox-open .site-header {
+  right: var(--scrollbar-compensation, 0px);
 }
 
 portfolio-gallery {
@@ -936,7 +1021,7 @@ portfolio-gallery {
   min-height: 0;
   padding: 3.75rem 5rem 1.25rem;
   place-items: center;
-  cursor: zoom-out;
+  cursor: var(--cursor-zoom-out);
   touch-action: pan-y;
 }
 
@@ -949,7 +1034,7 @@ portfolio-gallery {
   max-height: calc(100dvh - 5rem);
   object-fit: contain;
   opacity: 0;
-  cursor: default;
+  cursor: var(--cursor-default);
   filter: blur(0.35rem);
   transform: translateY(1.25rem) scale(0.92);
   transform-origin: center;
@@ -1036,7 +1121,7 @@ portfolio-gallery {
   -webkit-backdrop-filter: blur(12px) saturate(120%);
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
+  cursor: var(--cursor-interactive);
   transition: border-color var(--motion-fast) ease, color var(--motion-fast) ease,
     background var(--motion-fast) ease, box-shadow var(--motion-base) ease,
     opacity 220ms ease;
@@ -1114,7 +1199,7 @@ portfolio-gallery {
   color: inherit;
   background: transparent;
   box-shadow: 0 0.75rem 1.8rem rgb(0 0 0 / 0.12);
-  cursor: zoom-in;
+  cursor: var(--cursor-zoom-in);
   transition: border-color var(--motion-fast) ease, box-shadow var(--motion-base) ease,
     transform var(--motion-base) var(--ease-out);
 }
