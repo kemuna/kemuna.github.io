@@ -6,9 +6,19 @@ import { Image, getImage } from 'astro:assets'
 import adventureImage from '../assets/experience/wonderland-games/numberphile/adventure.webp'
 import adventure11Image from '../assets/experience/wonderland-games/numberphile/adventure-11.webp'
 import adventure13Image from '../assets/experience/wonderland-games/numberphile/adventure-13.webp'
+import adventure15Image from '../assets/experience/wonderland-games/numberphile/adventure-15.webp'
 import adventure19Image from '../assets/experience/wonderland-games/numberphile/adventure-19.webp'
+import adventure20Image from '../assets/experience/wonderland-games/numberphile/adventure-20.webp'
 import levelImage from '../assets/experience/wonderland-games/numberphile/level.webp'
 import menuImage from '../assets/experience/wonderland-games/numberphile/menu.webp'
+import airConditionerStoryImage from '../assets/experience/assol/air-conditioner-story.webp'
+import assolStickersImage from '../assets/experience/assol/assol-stickers.webp'
+import backToSchoolPostImage from '../assets/experience/assol/back-to-school-post.webp'
+import blackFridayBillboardImage from '../assets/experience/assol/black-friday-billboard-mockup.webp'
+import independenceDayPostImage from '../assets/experience/assol/independence-day-post.webp'
+import installmentPlanCitylightImage from '../assets/experience/assol/installment-plan-citylight.webp'
+import installmentPlanPostImage from '../assets/experience/assol/installment-plan-post.webp'
+import springSaleStoryImage from '../assets/experience/assol/spring-sale-story.webp'
 
 interface Props {
   language: Language
@@ -17,10 +27,36 @@ interface Props {
 const { language } = Astro.props
 const t = translations[language]
 
+const currentExperienceSources = [
+  installmentPlanPostImage,
+  backToSchoolPostImage,
+  independenceDayPostImage,
+  blackFridayBillboardImage,
+  installmentPlanCitylightImage,
+  assolStickersImage,
+  springSaleStoryImage,
+  airConditionerStoryImage,
+]
+
+const currentExperienceGallery = await Promise.all(
+  currentExperienceSources.map(async (src, index) => ({
+    src,
+    alt: t.currentExperienceGalleryItems[index],
+    fullSize: await getImage({
+      src,
+      width: Math.min(src.width, 1600),
+      format: 'webp',
+      quality: 85,
+    }),
+  })),
+)
+
 const wonderlandSources = [
   adventure11Image,
   adventure13Image,
+  adventure15Image,
   adventure19Image,
+  adventure20Image,
   menuImage,
   adventureImage,
   levelImage,
@@ -53,19 +89,25 @@ const wonderlandGallery = await Promise.all(
       <article class="experience-item">
         <div data-scroll-reveal>
           <h2>{t.currentExperienceRole}</h2>
-          <p>
-            <a class="company-link" href="https://assol.in.ua/" target="_blank" rel="noreferrer">
-              {t.currentExperienceCompany}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </p>
         </div>
         <div class="experience-meta" data-scroll-reveal>
           <p>{t.currentExperienceLocation}</p>
           <p>{t.currentExperiencePeriod}</p>
         </div>
         <div class="experience-details">
-          <p data-scroll-reveal>{t.currentExperienceDescription}</p>
+          <div class="company-summary" data-scroll-reveal>
+            <p>{t.currentExperienceDescription}</p>
+            <a
+              class="company-link"
+              href="https://assol.in.ua/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${t.companyWebsiteLabel}: ${t.currentExperienceCompany}`}
+              title={t.companyWebsiteLabel}
+            >
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
 
           <div class="experience-block" data-scroll-reveal>
             <h3>{t.responsibilitiesTitle}</h3>
@@ -75,7 +117,7 @@ const wonderlandGallery = await Promise.all(
           </div>
 
           <div class="experience-block" data-scroll-reveal>
-            <h3>{t.projectsTitle}</h3>
+            <h3>{t.currentExperienceProjectsTitle}</h3>
             <p>{t.currentExperienceProjects}</p>
           </div>
 
@@ -86,8 +128,38 @@ const wonderlandGallery = await Promise.all(
             </ul>
           </div>
 
-          <div class="gallery-placeholder" data-scroll-reveal>
-            {t.experienceGalleryPlaceholder}
+          <div class="experience-block" data-scroll-reveal>
+            <h3>{t.galleryTitle}</h3>
+            <GalleryLightbox
+              closeLabel={t.closeImageLabel}
+              dialogLabel={t.imageViewerLabel}
+              nextLabel={t.nextImageLabel}
+              previousLabel={t.previousImageLabel}
+            >
+              <div class="experience-gallery">
+                {
+                  currentExperienceGallery.map((item) => (
+                    <button
+                      class="experience-gallery-button"
+                      type="button"
+                      data-full-image={item.fullSize.src}
+                      data-image-alt={item.alt}
+                      aria-label={`${t.openImageLabel}: ${item.alt}`}
+                    >
+                      <Image
+                        src={item.src}
+                        alt={item.alt}
+                        widths={[320, 480, 720]}
+                        sizes="(max-width: 640px) calc((100vw - 2.5rem) / 2), (max-width: 900px) 30vw, 24rem"
+                        format="webp"
+                        quality={80}
+                        loading="lazy"
+                      />
+                    </button>
+                  ))
+                }
+              </div>
+            </GalleryLightbox>
           </div>
         </div>
       </article>
@@ -95,24 +167,25 @@ const wonderlandGallery = await Promise.all(
       <article class="experience-item">
         <div data-scroll-reveal>
           <h2>{t.experienceRole}</h2>
-          <p>
-            <a
-              class="company-link"
-              href="https://www.wonderland-games.com/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Wonderland Games
-              <span aria-hidden="true">↗</span>
-            </a>
-          </p>
         </div>
         <div class="experience-meta" data-scroll-reveal>
           <p>{t.experienceLocation}</p>
           <p>{t.experiencePeriod}</p>
         </div>
         <div class="experience-details">
-          <p data-scroll-reveal>{t.experienceDescription}</p>
+          <div class="company-summary" data-scroll-reveal>
+            <p>{t.experienceDescription}</p>
+            <a
+              class="company-link"
+              href="https://www.wonderland-games.com/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${t.companyWebsiteLabel}: Wonderland Games`}
+              title={t.companyWebsiteLabel}
+            >
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
 
           <div class="experience-block" data-scroll-reveal>
             <h3>{t.responsibilitiesTitle}</h3>

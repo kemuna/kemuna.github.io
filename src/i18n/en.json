@@ -40,7 +40,6 @@
     "I have experience creating advertising materials, following established brand guidelines, preparing artwork for print, adapting designs to multiple formats, and producing 2D assets for games. This portfolio showcases both my creative skills and professional experience. I am open to full-time opportunities that would allow me to continue growing as an artist and designer."
   ],
   "experienceTitle": "Work experience",
-  "experienceGalleryPlaceholder": "Examples of work from this role will be added later.",
   "galleryTitle": "Selected work",
   "openImageLabel": "Open full-size image",
   "closeImageLabel": "Close image",
@@ -50,18 +49,32 @@
   "experienceGalleryItems": [
     "Underwater adventure scene created for Numberphile",
     "Desert adventure scene created for Numberphile",
+    "Rocky canyon adventure scene created for Numberphile",
     "Snowy mountain adventure scene created for Numberphile",
+    "Volcanic adventure scene created for Numberphile",
     "Numberphile main menu screen",
     "Adventure selection screen from Numberphile",
     "Numberphile gameplay screen"
+  ],
+  "currentExperienceGalleryItems": [
+    "Installment plan social media post created for Assol",
+    "Back-to-school promotional social media post created for Assol",
+    "Ukrainian Independence Day social media post created for Assol",
+    "Black Friday billboard mockup created for Assol",
+    "Installment plan citylight design created for Assol",
+    "Branded sticker sheet created for Assol",
+    "Spring sale promotional story created for Assol",
+    "Air conditioner promotional story created for Assol"
   ],
   "currentExperienceRole": "Graphic Designer",
   "currentExperienceCompany": "Assol",
   "currentExperienceLocation": "Smila, Ukraine",
   "currentExperiencePeriod": "May 2025 — Present",
   "currentExperienceDescription": "Assol is a Ukrainian retail chain that sells household appliances and electronics through physical stores and its online shop.",
+  "companyWebsiteLabel": "Company website",
   "responsibilitiesTitle": "Responsibilities",
   "projectsTitle": "Projects",
+  "currentExperienceProjectsTitle": "Advertising campaigns",
   "skillsTitle": "Skills and tools",
   "currentExperienceResponsibilities": [
     "Creating advertising visuals for social media posts.",
@@ -77,8 +90,8 @@
     "Social media graphics",
     "Print-ready artwork preparation",
     "Resizing and adapting designs",
-    "AI-assisted image generation and editing",
     "Adobe Illustrator",
+    "AI-assisted image generation and editing",
     "Adobe Photoshop",
     "Magnific AI"
   ],
@@ -97,11 +110,11 @@
   "experienceSkills": [
     "Writing prompts for image generation",
     "AI-assisted image generation",
+    "Jira",
     "Creating 2D artwork for games",
     "Editing AI-generated images",
     "Adobe Photoshop",
-    "Midjourney",
-    "Jira"
+    "Midjourney"
   ],
   "notFoundTitle": "Page not found",
   "notFoundDescription": "The page may have been moved, deleted, or the address may be incorrect.",

@@ -703,7 +703,8 @@ h4 {
   display: grid;
   min-width: 0;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 2rem;
+  column-gap: 2rem;
+  row-gap: 1rem;
   padding-block: 1.5rem;
   border-top: 1px solid var(--border);
 }
@@ -804,6 +805,30 @@ h4 {
   line-height: 1.6;
 }
 
+.company-summary {
+  position: relative;
+  padding: 0.7rem 3.75rem 0.7rem 1rem;
+  border-left: 2px solid var(--accent);
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: linear-gradient(90deg, var(--accent-soft), transparent 72%);
+}
+
+.company-summary p {
+  color: var(--muted);
+}
+
+.company-summary .company-link {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.65rem;
+  width: 2.75rem;
+  min-height: 2.75rem;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  font-size: 1.15rem;
+}
+
 .experience-block {
   margin-top: 1.5rem;
 }
@@ -853,19 +878,9 @@ h4 {
   }
 }
 
-.gallery-placeholder {
-  display: grid;
-  min-height: 12rem;
-  margin-top: 2rem;
-  place-items: center;
-  border: 1px dashed var(--border);
-  color: var(--muted);
-  text-align: center;
-}
-
 .experience-gallery {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.75rem;
 }
 
