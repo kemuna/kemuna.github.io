@@ -168,7 +168,6 @@ body {
   flex-direction: column;
   isolation: isolate;
   margin: 0;
-  min-width: 320px;
   min-height: 100vh;
   padding-top: var(--header-height);
   color: var(--text);

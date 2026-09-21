@@ -1,9 +1,9 @@
 {
   "pageTitle": "Yelyzaveta Danchenko — Graphic Designer & 2D Artist | kemuna",
-  "pageDescription": "Portfolio of Yelyzaveta Danchenko, a graphic designer and 2D artist working under the creative pseudonym “kemuna”.",
+  "pageDescription": "Portfolio of Yelyzaveta Danchenko, featuring graphic design and 2D illustration created under the pseudonym “kemuna”.",
   "experiencePageDescription": "Professional experience of Yelyzaveta Danchenko in graphic design, 2D game art, AI-assisted image creation, and visual asset production.",
   "workPageDescription": "A selection of digital illustrations and character artwork by Yelyzaveta Danchenko.",
-  "socialPreviewAlt": "Portfolio preview for Yelyzaveta Danchenko, graphic designer and 2D artist",
+  "socialPreviewAlt": "Preview of Yelyzaveta Danchenko’s graphic design and 2D illustration portfolio",
   "realName": "Yelyzaveta Danchenko",
   "skipLink": "Skip to content",
   "navLabel": "Main navigation",
@@ -37,7 +37,7 @@
   "profilePhotoAlt": "Portrait of Yelyzaveta Danchenko",
   "biography": [
     "My name is Yelyzaveta Danchenko, and I present my work under the creative pseudonym “kemuna”. I am a graphic designer and 2D artist specializing in digital illustration and visual design. I especially enjoy creating characters and turning ideas into expressive visual concepts.",
-    "I have experience creating advertising materials, following established brand guidelines, preparing artwork for print, adapting designs to multiple formats, and producing 2D assets for games. This portfolio showcases both my creative skills and professional experience. I am open to full-time opportunities that would allow me to continue growing as an artist and designer."
+    "I have experience creating advertising materials within established brand guidelines, preparing artwork for print, adapting designs to multiple formats, and producing 2D assets for games. This portfolio showcases both my creative skills and professional experience. I am open to full-time opportunities where I can continue growing as an artist and designer."
   ],
   "experienceTitle": "Work experience",
   "galleryTitle": "Selected work",
@@ -61,7 +61,7 @@
     "Back-to-school promotional social media post created for Assol",
     "Ukrainian Independence Day social media post created for Assol",
     "Black Friday billboard mockup created for Assol",
-    "Installment plan citylight design created for Assol",
+    "Installment plan poster for a backlit street display, created for Assol",
     "Branded sticker sheet created for Assol",
     "Spring sale promotional story created for Assol",
     "Air conditioner promotional story created for Assol"
@@ -78,18 +78,18 @@
   "skillsTitle": "Skills and tools",
   "currentExperienceResponsibilities": [
     "Creating advertising visuals for social media posts.",
-    "Designing banners for retail stores, billboards, and printed stickers.",
+    "Designing banners for retail stores, billboards, and sticker layouts for print.",
     "Creating advertising materials that follow the company’s established brand guidelines.",
     "Resizing and adapting approved designs for different formats and advertising media.",
     "Preparing final, print-ready artwork."
   ],
-  "currentExperienceProjects": "Creating visual materials for themed and seasonal campaigns, promotions, and electronics sales throughout the calendar year.",
+  "currentExperienceProjects": "Creating visual materials for themed and seasonal campaigns, promotions, and sales events for appliances and electronics throughout the year.",
   "currentExperienceSkills": [
     "Advertising material design",
     "Working within brand guidelines",
     "Social media graphics",
-    "Print-ready artwork preparation",
-    "Resizing and adapting designs",
+    "Preparing artwork for print",
+    "Adapting designs to different formats",
     "Adobe Illustrator",
     "AI-assisted image generation and editing",
     "Adobe Photoshop",
@@ -98,9 +98,9 @@
   "experienceRole": "2D Game Artist",
   "experienceLocation": "Kyiv, Ukraine",
   "experiencePeriod": "November 2023 — April 2024",
-  "experienceDescription": "Wonderland Games is a Ukrainian game development studio that creates original games and provides co-development, game art production, and R&D services.",
+  "experienceDescription": "Wonderland Games is a Ukrainian game development studio that creates original games and provides co-development, game art production, and research and development (R&D) services.",
   "experienceResponsibilities": [
-    "Developing visual concepts and generating images from text prompts in Midjourney.",
+    "Creating visual concepts and generating images from text prompts in Midjourney.",
     "Creating backgrounds and standalone objects for game scenes.",
     "Editing generated images in Adobe Photoshop and preparing them for use in the game.",
     "Organizing and tracking production tasks in Jira."
@@ -117,6 +117,6 @@
     "Midjourney"
   ],
   "notFoundTitle": "Page not found",
-  "notFoundDescription": "The page may have been moved, deleted, or the address may be incorrect.",
+  "notFoundDescription": "The page may have been moved or deleted, or the web address may be incorrect.",
   "notFoundAction": "Return to portfolio"
 }
