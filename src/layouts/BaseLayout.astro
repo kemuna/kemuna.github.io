@@ -36,6 +36,7 @@ const currentPath = `/${language}/${pagePaths[currentPage]}`
 const alternatePath = `/${alternateLanguage}/${pagePaths[currentPage]}`
 const canonicalUrl = new URL(currentPath, Astro.site)
 const alternateUrl = new URL(alternatePath, Astro.site)
+const socialImageUrl = new URL('/branding/social-preview.png', Astro.site)
 const pageTransition = slide({ duration: '360ms' })
 ---
 
@@ -46,6 +47,7 @@ const pageTransition = slide({ duration: '360ms' })
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow, noimageindex" />
     <meta name="description" content={description} />
+    <meta name="author" content={t.realName} />
     <meta name="theme-color" content="#10090d" />
     <script is:inline>
       (() => {
@@ -73,11 +75,23 @@ const pageTransition = slide({ duration: '360ms' })
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="kemuna" />
     <meta property="og:locale" content={language === 'uk' ? 'uk_UA' : 'en_US'} />
     <meta
       property="og:locale:alternate"
       content={alternateLanguage === 'uk' ? 'uk_UA' : 'en_US'}
     />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:secure_url" content={socialImageUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t.socialPreviewAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <meta name="twitter:image:alt" content={t.socialPreviewAlt} />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" hreflang={language} href={canonicalUrl} />
     <link rel="alternate" hreflang={alternateLanguage} href={alternateUrl} />
@@ -86,7 +100,7 @@ const pageTransition = slide({ duration: '360ms' })
       hreflang="x-default"
       href={`https://kemuna.github.io/en/${pagePaths[currentPage]}`}
     />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link id="site-favicon" rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
     <ClientRouter />
   </head>
@@ -216,6 +230,19 @@ const pageTransition = slide({ duration: '360ms' })
     </footer>
 
     <script>
+      const syncFavicon = () => {
+        const favicon = document.querySelector<HTMLLinkElement>('#site-favicon')
+        if (!favicon) return
+
+        favicon.href = document.visibilityState === 'visible'
+          ? '/favicon.svg'
+          : '/favicon-inactive.svg'
+      }
+
+      syncFavicon()
+      document.addEventListener('visibilitychange', syncFavicon)
+      document.addEventListener('astro:page-load', syncFavicon)
+
       let scrollRevealObserver: IntersectionObserver | undefined
 
       const setupScrollReveal = () => {

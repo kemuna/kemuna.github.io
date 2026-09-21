@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="kemuna-inactive-gradient" x1="15" y1="12" x2="51" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d8d4d6"/>
+      <stop offset="1" stop-color="#8f898c"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="#151315" stroke="#4b4649" stroke-width="2"/>
+  <path d="M17 11v42h10V39l14 14h12L35 33l17-22H40L27 29V11z" fill="url(#kemuna-inactive-gradient)"/>
+</svg>

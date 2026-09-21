@@ -1,4 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#171714"/>
-  <path d="M18 13v38h9V37l13 14h12L34 32l17-19H40L27 28V13z" fill="#ff4b35"/>
+  <defs>
+    <linearGradient id="kemuna-gradient" x1="15" y1="12" x2="51" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f7edf2"/>
+      <stop offset="1" stop-color="#ff8fb3"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="#10090d" stroke="#452a36" stroke-width="2"/>
+  <path d="M17 11v42h10V39l14 14h12L35 33l17-22H40L27 29V11z" fill="url(#kemuna-gradient)"/>
 </svg>
