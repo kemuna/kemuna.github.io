@@ -2,7 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import GalleryLightbox from './GalleryLightbox.astro'
 import { translations, type Language } from '../i18n'
-import { Image, getImage } from 'astro:assets'
+import { createResponsiveGalleryImage, fullImageSizes } from '../utils/createResponsiveGalleryImage'
+import { Image } from 'astro:assets'
 import adventureImage from '../assets/experience/wonderland-games/numberphile/adventure.webp'
 import adventure11Image from '../assets/experience/wonderland-games/numberphile/adventure-11.webp'
 import adventure13Image from '../assets/experience/wonderland-games/numberphile/adventure-13.webp'
@@ -42,12 +43,7 @@ const currentExperienceGallery = await Promise.all(
   currentExperienceSources.map(async (src, index) => ({
     src,
     alt: t.currentExperienceGalleryItems[index],
-    fullSize: await getImage({
-      src,
-      width: Math.min(src.width, 1600),
-      format: 'webp',
-      quality: 85,
-    }),
+    fullSize: await createResponsiveGalleryImage(src, 85),
   })),
 )
 
@@ -66,12 +62,7 @@ const wonderlandGallery = await Promise.all(
   wonderlandSources.map(async (src, index) => ({
     src,
     alt: t.experienceGalleryItems[index],
-    fullSize: await getImage({
-      src,
-      width: Math.min(src.width, 1600),
-      format: 'webp',
-      quality: 85,
-    }),
+    fullSize: await createResponsiveGalleryImage(src, 85),
   })),
 )
 ---
@@ -143,6 +134,8 @@ const wonderlandGallery = await Promise.all(
                       class="experience-gallery-button"
                       type="button"
                       data-full-image={item.fullSize.src}
+                      data-full-srcset={item.fullSize.srcset}
+                      data-full-sizes={fullImageSizes}
                       data-image-alt={item.alt}
                       aria-label={`${t.openImageLabel}: ${item.alt}`}
                     >
@@ -232,6 +225,8 @@ const wonderlandGallery = await Promise.all(
                       class="experience-gallery-button"
                       type="button"
                       data-full-image={item.fullSize.src}
+                      data-full-srcset={item.fullSize.srcset}
+                      data-full-sizes={fullImageSizes}
                       data-image-alt={item.alt}
                       aria-label={`${t.openImageLabel}: ${item.alt}`}
                     >

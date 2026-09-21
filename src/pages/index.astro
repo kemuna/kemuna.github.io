@@ -1,5 +1,9 @@
 ---
 const fallbackUrl = '/en/'
+const pageTitle = 'Yelyzaveta Danchenko — Graphic Designer & 2D Artist | kemuna'
+const pageDescription = 'Portfolio of Yelyzaveta Danchenko, featuring graphic design and 2D illustration created under the pseudonym “kemuna”.'
+const siteUrl = 'https://kemuna.github.io/'
+const socialImageUrl = `${siteUrl}branding/social-preview.png`
 ---
 
 <!doctype html>
@@ -7,10 +11,36 @@ const fallbackUrl = '/en/'
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex, nofollow, noimageindex" />
+    <meta name="googlebot" content="noindex, nofollow, noimageindex" />
+    <meta name="bingbot" content="noindex, nofollow, noimageindex" />
+    <meta name="description" content={pageDescription} />
+    <meta name="author" content="Yelyzaveta Danchenko" />
+    <meta name="theme-color" content="#10090d" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:site_name" content="kemuna" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="uk_UA" />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:secure_url" content={socialImageUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Preview of Yelyzaveta Danchenko’s graphic design and 2D illustration portfolio" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <meta name="twitter:image:alt" content="Preview of Yelyzaveta Danchenko’s graphic design and 2D illustration portfolio" />
     <meta http-equiv="refresh" content={`0; url=${fallbackUrl}`} />
     <link rel="canonical" href="https://kemuna.github.io/en/" />
-    <title>Kemuna</title>
+    <link rel="alternate" hreflang="en" href="https://kemuna.github.io/en/" />
+    <link rel="alternate" hreflang="uk" href="https://kemuna.github.io/uk/" />
+    <link rel="alternate" hreflang="x-default" href={siteUrl} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{pageTitle}</title>
     <script is:inline>
       (() => {
         let savedLanguage = null

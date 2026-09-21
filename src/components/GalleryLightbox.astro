@@ -219,8 +219,18 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         ]
 
         adjacentIndexes.forEach((index) => {
-          const src = orderedTriggers[index]?.dataset.fullImage
-          if (src) new window.Image().src = src
+          const trigger = orderedTriggers[index]
+          const src = trigger?.dataset.fullImage
+
+          if (!src) return
+
+          const image = new window.Image()
+          const srcset = trigger.dataset.fullSrcset
+          const sizes = trigger.dataset.fullSizes
+
+          if (sizes) image.sizes = sizes
+          if (srcset) image.srcset = srcset
+          image.src = src
         })
       }
 
@@ -229,12 +239,20 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         const trigger = orderedTriggers[currentIndex]
         activeTrigger = trigger
         const src = trigger?.dataset.fullImage ?? ''
+        const srcset = trigger?.dataset.fullSrcset ?? ''
+        const sizes = trigger?.dataset.fullSizes ?? ''
         const alt = trigger?.dataset.imageAlt ?? ''
         const currentChangeId = ++imageChangeId
 
         window.clearTimeout(changeTimer)
 
         const applyImage = () => {
+          if (sizes) fullImage.sizes = sizes
+          else fullImage.removeAttribute('sizes')
+
+          if (srcset) fullImage.srcset = srcset
+          else fullImage.removeAttribute('srcset')
+
           fullImage.src = src
           fullImage.alt = alt
           counter.textContent = `${currentIndex + 1} / ${orderedTriggers.length}`
@@ -541,6 +559,8 @@ const { closeLabel, dialogLabel, nextLabel, previousLabel } = Astro.props
         fullImage.classList.remove('is-shared-hidden', ...switchClasses)
         fullImage.style.removeProperty('transition')
         fullImage.removeAttribute('src')
+        fullImage.removeAttribute('srcset')
+        fullImage.removeAttribute('sizes')
         fullImage.alt = ''
         document.documentElement.classList.remove('lightbox-open')
         document.documentElement.style.removeProperty('--scrollbar-compensation')

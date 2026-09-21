@@ -45,7 +45,16 @@ const pageTransition = slide({ duration: '360ms' })
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex, nofollow, noimageindex" />
+    {
+      currentPage === 'not-found' ? (
+        <meta name="robots" content="noindex, nofollow, noimageindex" />
+      ) : (
+        <>
+          <meta name="googlebot" content="noindex, nofollow, noimageindex" />
+          <meta name="bingbot" content="noindex, nofollow, noimageindex" />
+        </>
+      )
+    }
     <meta name="description" content={description} />
     <meta name="author" content={t.realName} />
     <meta name="theme-color" content="#10090d" />

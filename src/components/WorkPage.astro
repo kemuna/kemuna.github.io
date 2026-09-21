@@ -2,7 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import GalleryLightbox from './GalleryLightbox.astro'
 import { translations, type Language } from '../i18n'
-import { Image, getImage } from 'astro:assets'
+import { createResponsiveGalleryImage, fullImageSizes } from '../utils/createResponsiveGalleryImage'
+import { Image } from 'astro:assets'
 import annieImage from '../assets/work/illustrations/annie.webp'
 import dancerImage from '../assets/work/illustrations/dancer.webp'
 import elenaHllImage from '../assets/work/illustrations/elena-hll.webp'
@@ -44,12 +45,7 @@ const workGallery = await Promise.all(
   workImages.map(async (src, index) => ({
     src,
     alt: t.workGalleryAlts[index],
-    fullSize: await getImage({
-      src,
-      width: Math.min(src.width, 2000),
-      format: 'webp',
-      quality: 88,
-    }),
+    fullSize: await createResponsiveGalleryImage(src, 88),
   })),
 )
 ---
@@ -78,6 +74,8 @@ const workGallery = await Promise.all(
                 class="work-gallery-button"
                 type="button"
                 data-full-image={item.fullSize.src}
+                data-full-srcset={item.fullSize.srcset}
+                data-full-sizes={fullImageSizes}
                 data-image-alt={item.alt}
                 aria-label={`${t.openImageLabel}: ${item.alt}`}
               >
