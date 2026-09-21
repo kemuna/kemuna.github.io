@@ -7,18 +7,14 @@ import { Image } from 'astro:assets'
 import adventureImage from '../assets/experience/wonderland-games/numberphile/adventure.webp'
 import adventure11Image from '../assets/experience/wonderland-games/numberphile/adventure-11.webp'
 import adventure13Image from '../assets/experience/wonderland-games/numberphile/adventure-13.webp'
-import adventure15Image from '../assets/experience/wonderland-games/numberphile/adventure-15.webp'
 import adventure19Image from '../assets/experience/wonderland-games/numberphile/adventure-19.webp'
-import adventure20Image from '../assets/experience/wonderland-games/numberphile/adventure-20.webp'
 import levelImage from '../assets/experience/wonderland-games/numberphile/level.webp'
 import menuImage from '../assets/experience/wonderland-games/numberphile/menu.webp'
-import airConditionerStoryImage from '../assets/experience/assol/air-conditioner-story.webp'
-import assolStickersImage from '../assets/experience/assol/assol-stickers.webp'
-import backToSchoolPostImage from '../assets/experience/assol/back-to-school-post.webp'
+import assolStickerSheetImage from '../assets/experience/assol/assol-sticker-sheet.webp'
 import blackFridayBillboardImage from '../assets/experience/assol/black-friday-billboard-mockup.webp'
 import independenceDayPostImage from '../assets/experience/assol/independence-day-post.webp'
 import installmentPlanCitylightImage from '../assets/experience/assol/installment-plan-citylight.webp'
-import installmentPlanPostImage from '../assets/experience/assol/installment-plan-post.webp'
+import speakerGiveawayPostImage from '../assets/experience/assol/speaker-giveaway-post.webp'
 import springSaleStoryImage from '../assets/experience/assol/spring-sale-story.webp'
 
 interface Props {
@@ -29,14 +25,12 @@ const { language } = Astro.props
 const t = translations[language]
 
 const currentExperienceSources = [
-  installmentPlanPostImage,
-  backToSchoolPostImage,
+  speakerGiveawayPostImage,
   independenceDayPostImage,
   blackFridayBillboardImage,
   installmentPlanCitylightImage,
-  assolStickersImage,
+  assolStickerSheetImage,
   springSaleStoryImage,
-  airConditionerStoryImage,
 ]
 
 const currentExperienceGallery = await Promise.all(
@@ -50,9 +44,7 @@ const currentExperienceGallery = await Promise.all(
 const wonderlandSources = [
   adventure11Image,
   adventure13Image,
-  adventure15Image,
   adventure19Image,
-  adventure20Image,
   menuImage,
   adventureImage,
   levelImage,
