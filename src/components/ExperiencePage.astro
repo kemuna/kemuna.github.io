@@ -134,7 +134,7 @@ const wonderlandGallery = await Promise.all(
                       <Image
                         src={item.src}
                         alt={item.alt}
-                        widths={[320, 480, 720]}
+                        widths={[320, 384, 480, 640, 720]}
                         sizes="(max-width: 640px) calc((100vw - 2.5rem) / 2), (max-width: 900px) 30vw, 24rem"
                         format="webp"
                         quality={80}
@@ -225,7 +225,7 @@ const wonderlandGallery = await Promise.all(
                       <Image
                         src={item.src}
                         alt={item.alt}
-                        widths={[320, 480, 720]}
+                        widths={[320, 384, 480, 640, 720]}
                         sizes="(max-width: 640px) calc((100vw - 2.5rem) / 2), (max-width: 900px) 30vw, 24rem"
                         format="webp"
                         quality={80}

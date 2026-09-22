@@ -82,11 +82,12 @@ const workGallery = await Promise.all(
                 <Image
                   src={item.src}
                   alt={item.alt}
-                  widths={[320, 480, 800]}
+                  widths={[320, 384, 480, 640, 720, 800]}
                   sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 960px) 48vw, 30vw"
                   format="webp"
                   quality={82}
-                  loading={index < 3 ? 'eager' : 'lazy'}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={index === 0 ? 'high' : undefined}
                 />
               </button>
             </figure>
